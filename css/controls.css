@@ -1,0 +1,205 @@
+/* TableGrid */
+.tableGrid table {
+  border-collapse: collapse;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: bold;
+  flex: none !important;
+  width: fit-content;
+}
+
+.tableGrid table tr:hover td {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.tableGrid table tr {
+  border-bottom: 1px solid #24282A;
+}
+
+.tableGrid table td {
+  padding: 4px;
+}
+
+.tableGrid table th, .tableGrid .gridFixed div {
+  background-color: #24282A;
+  border: 1px solid #000000;
+  font-size: 14px;
+  padding: 2px 3px;
+}
+
+.tableGrid .gridSource {
+  visibility: hidden;
+}
+
+.tableGrid .gridFixed {
+  display: flex;
+  position: fixed;
+}
+
+.tableGrid .gridFixed div {
+  display: inline-block;
+  border-left: 0;
+  border-top: 0;
+  font-weight: bold;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.tableGrid .gridFixed div:first-child {
+  border-left: 1px solid black;
+}
+/* End of TableGrid */
+
+/* TableEdit */
+.tableEdit {
+  background-color: #33373A;
+  border: 1px solid black;
+  padding: 5px;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+}
+
+.tableEdit table {
+  width: 100%;
+  font-weight: bold;
+  background-color: #24282A;
+  border: 1px solid black;
+  border-radius: 2px;
+}
+
+.tableEdit td:first-child {
+  border-bottom: 1px solid #33373A;
+  white-space: nowrap;
+}
+
+.tableEdit tr:last-child td:first-child {
+  border-bottom: none;
+}
+
+.tableEdit tr {
+  height: 32px;
+}
+
+.tableEdit td {
+  padding-left: 4px;
+}
+
+.tableEdit form > div {
+  text-align: center;
+  background-color: #24282A;
+  border: 1px solid black;
+  border-radius: 2px;
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.tableEdit button {
+  background-color: #2A4151;
+  border: 1px solid black;
+  border-radius: 2px;
+  margin: 3px 5px;
+  width: 80px;
+  color: #CBD0D0;
+  padding: 3px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+select, input {
+  background-color: #33373A;
+  color: #CBD0D0;
+  font-weight: bold;
+  border: 1px solid black;
+  border-radius: 2px;
+  font-family: sans-serif;
+}
+
+select {
+  height: 26px;
+  width: 100%;
+}
+
+option {
+  font-weight: bold;
+}
+
+input {
+  height: 22px;
+  width: 200px;
+  padding-left: 4px;
+}
+/* End of TableEdit */
+
+/* xSelect */
+.xSelect {
+  font-size: 14px;
+}
+
+.xSelect > div {
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 2px;
+  height: 24px;
+  background-color: #33373A;
+  padding: 0 2px;
+}
+
+.xSelect .selectedOptions {
+  flex-grow: 1;
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.xSelect span {
+/*background-color: #2A4151;
+  border: 1px solid black;
+  border-radius: 2px;*/
+  padding: 0 2px;
+  margin-right: 3px;
+}
+
+.xSelect .button {
+  background-color: #24282A;
+  min-width: 18px;
+  height: 18px;
+  border: 1px solid black;
+  border-radius: 2px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.xSelect ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 1px 0 0 0;
+  position: absolute;
+  z-index: 20;
+  border: 1px solid black;
+  border-radius: 2px;
+  max-height: 200px;
+  overflow: auto;
+  background-color: #45474B;
+}
+
+.xSelect li {
+  padding: 2px 5px;
+  cursor: pointer;
+}
+
+.xSelect li:hover {
+  background-color: #33373A;
+}
+
+.xSelect .optionSelected {
+  background-color: #007ACC;
+}
+/* End of xSelect */

@@ -1,0 +1,15 @@
+{
+  "name": "Travel Costs V",
+  "short_name": "TravelCostsV",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "start_url": "/",
+  "icons": [
+    {
+      "src": "img/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+/* FlexColContainer */
+.flexColContainer {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  flex: 1;
+  height: 100%;
+  width: 100%;
+}
+
+.flexColContainer .mainContent {
+  overflow: auto;
+  flex: 1;
+}
+/* End of FlexColContainer */
