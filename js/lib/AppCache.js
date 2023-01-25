@@ -35,9 +35,11 @@ async function updateAppCache(appName) {
         return false;
 
       console.log('Update: Caching Files');
-      const cache = await caches.open(appName);
+      const filesArray = Array.from(files),
+            cache = await caches.open(appName),
+            toDelete = (await cache.keys()).filter(k => filesArray.some(f => k.url.endsWith(f)));
 
-      for (const key of files.keys())
+      for (const key of toDelete)
         await cache.delete(key);
 
       localStorage.setItem(`${appName}_version`, ver);
