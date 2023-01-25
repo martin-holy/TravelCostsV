@@ -7,6 +7,7 @@ import GLO_HelpPlaces from './stores/GLO_HelpPlaces.js';
 import GLO_People from './stores/GLO_People.js';
 import MON_Costs from './stores/MON_Costs.js';
 import MON_Incomes from './stores/MON_Incomes.js';
+import MON_IncomesTypes from './stores/MON_IncomesTypes.js';
 import MON_Debts from './stores/MON_Debts.js';
 import MON_CostsTypes from './stores/MON_CostsTypes.js';
 import MON_Currencies from './stores/MON_Currencies.js';
@@ -25,6 +26,7 @@ import RepGloCountriesStay from './reports/RepGloCountriesStay.js';
 import RepGloCountriesStaySum from './reports/RepGloCountriesStaySum.js';
 import RepMonCosts from './reports/RepMonCosts.js';
 import RepMonDebtsCalc from './reports/RepMonDebtsCalc.js';
+import RepMonIncomes from './reports/RepMonIncomes.js';
 
 import TheAppMap from './TheAppMap.js';
 import TheMenu from './TheMenu.js';
@@ -41,16 +43,18 @@ export default {
     RepGloCountriesStay,
     RepGloCountriesStaySum,
     RepMonCosts,
-    RepMonDebtsCalc
+    RepMonDebtsCalc,
+    RepMonIncomes
   },
 
   data () {
     return {
       appName: 'Travel Costs V',
       appTitle: 'Travel Costs V',
+      appVersion: '',
       dbName: 'TravelCostsV',
-      dbVersion: 1,
-      dbDataVersion: 1,
+      dbVersion: 2,
+      dbDataVersion: 2,
       activeTabName: 'app-map',
       activeRepName: '',
       isTheMenuVisible: false,
@@ -66,6 +70,7 @@ export default {
         GLO_People,
         MON_Costs,
         MON_Incomes,
+        MON_IncomesTypes,
         MON_Debts,
         MON_CostsTypes,
         MON_Currencies,
@@ -81,6 +86,7 @@ export default {
   },
 
   async created() {
+    this.appVersion = localStorage.getItem(`${this.dbName}_version`)
     await this.db.init(this.dbName, this.dbVersion, this.stores, this.log);
     await this.$_updateDbData();
     await this.$_createStoresInGroups();
@@ -89,9 +95,7 @@ export default {
   methods: {
     async $_updateDbData() {
       const dataVersion = await this.db.getRecordById(this.stores.ADM_AppSettings, 1);
-      
-      if (dataVersion === this.dbDataVersion) return;
-  
+
       // init
       if (!dataVersion) {
         const stores = [];
@@ -101,11 +105,23 @@ export default {
         await this.db.insert(this.stores.ADM_AppStores, stores);
         await this.db.insert(this.stores.ADM_AppStoreGroups, [
           { id: 1, name: 'Administrace', icon: 'adm', index: 4, stores: [1, 2] },
-          { id: 2, name: 'Příjmy a Výdaje', icon: 'money', index: 1, stores: [20, 21, 22, 23, 24, 26] },
+          { id: 2, name: 'Příjmy a Výdaje', icon: 'money', index: 1, stores: [20, 21, 22, 24, 26, 23, 25] },
           { id: 3, name: 'Vozidlo', icon: 'car', index: 2, stores: [30, 31, 32, 33, 34, 35] },
           { id: 4, name: 'Globální', icon: 'global', index: 3, stores: [10, 11, 12, 13] }
         ]);
         await this.db.insert(this.stores.ADM_AppSettings, [{ id: 1, dataVersion: this.dbDataVersion }]);
+
+        return;
+      }
+      
+      if (dataVersion.dataVersion === this.dbDataVersion) return;
+  
+      if (this.dbDataVersion === 2) {
+        await this.db.insert(this.stores.ADM_AppStores, [this.stores.MON_IncomesTypes]);
+        await this.db.update(this.stores.ADM_AppStoreGroups, [
+          { id: 2, name: 'Příjmy a Výdaje', icon: 'money', index: 1, stores: [20, 21, 22, 24, 26, 23, 25] }
+        ]);
+        await this.db.update(this.stores.ADM_AppSettings, [{ id: 1, dataVersion: this.dbDataVersion }]);
       }
     },
 
@@ -116,7 +132,7 @@ export default {
       for (const group of groups) {
         this.storesInGroups.push({
           group: group,
-          stores: stores.filter(s => group.stores.includes(s.schema.id))});
+          stores: group.stores.map(storeId => stores.find(s => s.schema.id === storeId))});
       }
     },
 
@@ -181,7 +197,9 @@ export default {
           </div>
         </div>
 
-        <span id="version"></span>
+        <span class="version">
+          {{ appVersion }}
+        </span>
       </header>
 
       <div class="mainContent">
