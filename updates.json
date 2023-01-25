@@ -1,8 +1,10 @@
 {
   "updates": [
     {
-      "version": "v2022.07.07_3",
-      "files": ["/TravelCostsV/manifest.json"]
+      "version": "v2023.01.25",
+      "files": [
+        "/TravelCostsV/css/dark.css"
+      ]
     }
   ]
 }
