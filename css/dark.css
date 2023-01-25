@@ -50,7 +50,7 @@ header {
   margin-right: 2px;
 }
 
-#version {
+.theTravelCosts .version {
   font-size: 10px;
   position: absolute;
   right: 5px;
@@ -408,17 +408,3 @@ header {
   color: #70dc35;
 }
 /* End of RepGloCountriesStay */
-
-/* InfoCursor */
-.infoCursor {
-  height: 20px;
-  position: absolute;
-  left: 0;
-}
-
-.infoCursor polygon {
-  fill: rgba(0, 0, 0, 0.5);
-  stroke: white;
-  stroke-width: 1;
-}
-/* End of InfoCursor */

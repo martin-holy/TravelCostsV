@@ -203,3 +203,17 @@ input {
   background-color: #007ACC;
 }
 /* End of xSelect */
+
+/* InfoCursor */
+.infoCursor {
+  height: 20px;
+  position: absolute;
+  left: 0;
+}
+
+.infoCursor polygon {
+  fill: rgba(0, 0, 0, 0.5);
+  stroke: white;
+  stroke-width: 1;
+}
+/* End of InfoCursor */
