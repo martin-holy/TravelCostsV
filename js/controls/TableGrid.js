@@ -21,7 +21,7 @@ export default {
   },
 
   watch: {
-    records() {
+    'records.length'() {
       this.recs.length = 0;
       this.rowsCount = 0;
     }
