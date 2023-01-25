@@ -14,7 +14,11 @@ const MON_Incomes = {
       { name: 'amount', title: 'Částka', type: 'num', required: true, align: 'right' },
       { name: 'currencyId', title: 'Měna', type: 'select', required: true, align: 'center', default: [9], source: { name: 'MON_Currencies', property: 'code' } },
       { name: 'eur', title: 'EUR', type: 'calc', align: 'right', funcName: 'amountInEUR' },
+      { name: 'incomeTypeId', title: 'Typ', type: 'select', required: true, default: [1], source: { name: 'MON_IncomesTypes', property: 'name' } },
       { name: 'desc', title: 'Popis', type: 'text' }
+    ],
+    reports: [
+      { name: 'RepMonIncomes', title: 'Příjmy' }
     ]
   },
   amountInEUR: common.amountInEUR
