@@ -1,9 +1,12 @@
-{
-  "updates": [
-    {
-      "version": "v2023.01.25",
+{ "updates": [
+    { "version": "v2023.01.25",
       "files": [
         "/TravelCostsV/css/dark.css"
+      ]
+    },
+    { "version": "v2023.01.26",
+      "files": [
+        "/TravelCostsV/js/controls/TableGrid.js"
       ]
     }
   ]

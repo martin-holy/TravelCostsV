@@ -8,8 +8,7 @@ export default {
 
   data () {
     return {
-      rowsCount: 0,
-      recs: []
+      loadCount: 0
     }
   },
 
@@ -17,13 +16,17 @@ export default {
     storeProps() {
       return this.schema.properties
         .filter(x => !x.hidden && x.type !== 'array');
+    },
+
+    gridRecords() {
+      const count = Math.min(this.loadCount, this.records.length);
+      return this.records.slice(0, count + 1);
     }
   },
 
   watch: {
     'records.length'() {
-      this.recs.length = 0;
-      this.rowsCount = 0;
+      this.loadCount = 0;
     }
   },
 
@@ -101,23 +104,13 @@ export default {
     },
 
     $_appendRows() {
-      const recsCount = this.records.length,
-            g = this.$refs.grid,
+      const g = this.$refs.grid,
             t = this.$refs.table,
             buffer = (g.clientHeight / 2),
             spaceForMore = g.clientHeight > t.clientHeight - g.scrollTop - buffer;
 
-      if (spaceForMore && this.rowsCount < recsCount) {
-        let add = Math.min(10, recsCount - this.rowsCount);
-
-        while (add > 0) {
-          add--;
-          this.recs.push(this.records[this.rowsCount]);
-          this.rowsCount++;
-        }
-
-        this.$_setFixedThead();
-      }
+      if (spaceForMore && this.loadCount < this.records.length)
+        this.loadCount += 10;
     }
   },
 
@@ -154,7 +147,7 @@ export default {
 
         <tbody>
           <tr
-            v-for="rec in recs"
+            v-for="rec in gridRecords"
             :key="rec.Id"
             @click="$emit('itemSelected', rec)">
             <td
