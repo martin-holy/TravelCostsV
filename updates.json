@@ -8,6 +8,12 @@
       "files": [
         "/TravelCostsV/js/controls/TableGrid.js"
       ]
+    },
+    { "version": "v2023.01.27",
+      "files": [
+        "/TravelCostsV/js/controls/TableGrid.js",
+        "/TravelCostsV/css/controls.css"
+      ]
     }
   ]
 }

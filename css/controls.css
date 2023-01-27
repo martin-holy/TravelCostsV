@@ -20,6 +20,10 @@
   padding: 4px;
 }
 
+.tableGrid table td span {
+  padding: 3px;
+}
+
 .tableGrid table th, .tableGrid .gridFixed div {
   background-color: #24282A;
   border: 1px solid #000000;

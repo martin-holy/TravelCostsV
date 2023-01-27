@@ -47,7 +47,14 @@ export default {
         case 'multiSelect': {
           if (rec[prop.name])
             val = rec[prop.name]
-              .map(id => prop.source.store.records.find(d => d.id === id)[prop.source.property])
+              .map(id => {
+                const lookUp = prop.source.store.records.find(d => d.id === id),
+                      value = lookUp[prop.source.property];
+                
+                return lookUp.bgColor
+                  ? `<span style="background-color: ${lookUp.bgColor}">${value}</span>`
+                  : value;
+              })
               .join(', ');
           break;
         }
@@ -153,8 +160,8 @@ export default {
             <td
               v-for="(prop, index) in storeProps"
               :key="index"
-              :style="$_getRecStyle(rec, prop)">
-              {{ $_getRecVal(rec, prop) }}
+              :style="$_getRecStyle(rec, prop)"
+              v-html="$_getRecVal(rec, prop)">
             </td>
           </tr>
         </tbody>
