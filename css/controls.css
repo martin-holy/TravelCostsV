@@ -159,7 +159,7 @@ input {
   overflow: hidden;
 }
 
-.xSelect span {
+.xSelect .selectedOptions span {
 /*background-color: #2A4151;
   border: 1px solid black;
   border-radius: 2px;*/
@@ -203,8 +203,9 @@ input {
   background-color: #33373A;
 }
 
-.xSelect .optionSelected {
-  background-color: #007ACC;
+.xSelect li div {
+  width: 18px;
+  display: inline-block;
 }
 /* End of xSelect */
 

@@ -46,9 +46,11 @@ export default {
     },
 
     $_isOptionSelected(option) {
-      return this.isMulti
+      const selected = this.isMulti
         ? this.selectedOptions.includes(option)
         : option.value === this.value;
+
+      return selected ? '✔' : '';
     }
   },
 
@@ -71,9 +73,9 @@ export default {
           v-for="option in data"
           :key="option.value"
           :value="option.value"
-          :class="{ optionSelected: $_isOptionSelected(option) }"
+          :style="{backgroundColor:option.bgColor}"
           @click="$_optionSelected(option)">
-          {{ option.name }}
+          <div>{{ $_isOptionSelected(option) }}</div> {{ option.name }}
         </li>
       </ul>
     </div>`
