@@ -25,7 +25,7 @@ const ADM_AppStores = {
   // TODO ještě to poštelovat. promise by mel bejt asi v reader.onload
   import(db) {
     if (confirm('Do you want to backup data before Import?\nAfter backup click on Import again.')) {
-      this.export();
+      this.export(db);
       return null;
     }
 
