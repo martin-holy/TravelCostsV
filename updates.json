@@ -35,6 +35,14 @@
         "/TravelCostsV/js/reports/RepMonIncomes.js",
         "/TravelCostsV/js/TheYearGroupsRep.js"
       ]
+    },
+    { "version": "v2023.01.31_1",
+      "files": [
+        "/TravelCostsV/js/reports/RepMonIncomes.js",
+        "/TravelCostsV/js/extensions.js",
+        "/TravelCostsV/js/TheYearGroupsRep.js",
+        "/TravelCostsV/js/lib/IDb.js"
+      ]
     }
   ]
 }
