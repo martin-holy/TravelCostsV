@@ -1,8 +1,8 @@
-import xSelect from './xSelect.js';
+import TableLookUp from './TableLookUp.js';
 
 export default {
   components: {
-    xSelect
+    TableLookUp
   },
 
   props: {
@@ -82,18 +82,6 @@ export default {
         await this.store[this.store.schema.onSaveFunc](this.db);
 
       this.$emit('recSaved');
-    },
-
-    $_getXSelectData(prop) {
-      return prop.source.store.records.map((x) => {
-        return {
-          value: x.id,
-          name: x[prop.source.property],
-          bgColor: x.bgColor }});
-    },
-
-    $_xSelectOnInput(value, prop) {
-      this.recCopy[prop.name] = value;
     }
   },
 
@@ -118,13 +106,16 @@ export default {
                 :required="prop.required">
               </textarea>
 
-              <x-select
+              <table-look-up
                 v-else-if="prop.type === 'select' || prop.type === 'multiSelect'"
+                :key="index"
                 :value="recCopy[prop.name]"
-                :data="$_getXSelectData(prop)"
-                :isMulti="prop.type === 'multiSelect'"
-                @input="$_xSelectOnInput($event, prop)">
-              </x-select>
+                :schema="prop.source.store.schema"
+                :records="prop.source.store.records"
+                :isMultiSelect="prop.type === 'multiSelect'"
+                :displayField="prop.source.property"
+                @input="recCopy[prop.name] = $event">
+              </table-look-up>
 
               <input
                 v-else-if="prop.type === 'int'"

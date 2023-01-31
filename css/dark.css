@@ -271,7 +271,27 @@ header {
 }
 /* End of TheYearGroupsRep */
 
+/* RepMonCosts */
+.repMonCosts .tableLookUp {
+  width: 100%;
+}
+/* End of RepMonCosts */
+
+/* RepMonIncomes */
+.repMonIncomes .tableLookUp {
+  width: 100%;
+}
+/* End of RepMonIncomes */
+
 /* RepCarDrives */
+.repCarDrives .tableLookUp {
+  width: 102px;
+}
+
+.repCarDrives .tableLookUp .tableGrid {
+  width: 100px;
+}
+
 .repCarDrives .footer > div {
   padding-bottom: 2px;
 }

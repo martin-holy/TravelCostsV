@@ -1,10 +1,10 @@
-import xSelect from './../controls/xSelect.js';
+import TableLookUp from './../controls/TableLookUp.js';
 import TheYearGroupsRep from './../TheYearGroupsRep.js';
 import common from './../common.js';
 
 export default {
   components: {
-    xSelect,
+    TableLookUp,
     TheYearGroupsRep
   },
 
@@ -12,15 +12,21 @@ export default {
     return {
       dataReady: false,
       groupsInYear: 12,
-      groupsInYearData: [
-        { value: 12, name: '1 Month' },
-        { value: 4, name: '3 Months' },
-        { value: 2, name: '6 Months' },
-        { value: 1, name: '1 Year' }
+      groupsInYearRecords: [
+        { id: 12, group: '1 Měsíc' },
+        { id: 4, group: '3 Měsíce' },
+        { id: 2, group: '6 Měsíců' },
+        { id: 1, group: '1 Rok' }
       ],
+      groupsInYearSchema: {
+        properties: [
+          { name: 'id', title: 'Id', type: 'int', required: true, hidden: true },
+          { name: 'group', title: 'Skupina', type: 'text' }
+        ]
+      },
       records: [],
       costsTypes: [],
-      costsTypesData: []
+      costsTypesStore: {}
     }
   },
 
@@ -28,24 +34,23 @@ export default {
     this.records = await this.getDataFromDb();
     
     // select all costs types
-    for (const type of this.costsTypesData)
-      this.costsTypes.push(type.value);
+    for (const type of this.costsTypesStore.records)
+      this.costsTypes.push(type.id);
 
     this.dataReady = true;
   },
 
   methods: {
     async getDataFromDb() {
-      this.costsTypesData = (await this.db.data(this.db.stores.MON_CostsTypes))
-        .map(x => ({ ...x, value: x.id }))
-        .orderBy('name');
+      this.costsTypesStore = this.db.stores.MON_CostsTypes;
 
-      const costs = (await this.db.data(this.db.stores.MON_Costs))
+      const ctData = await this.db.data(this.db.stores.MON_CostsTypes),
+            costs = (await this.db.data(this.db.stores.MON_Costs))
              .map(rec => ({
                 date: rec.date,
                 eur: rec.eur,
                 desc: rec.desc,
-                type: this.costsTypesData.find(t => t.id === rec.costTypeId) })),
+                type: ctData.find(t => t.id === rec.costTypeId) })),
             transportData = await this.getTransportData(),
             allData = costs.concat(transportData).orderBy('date', false);
 
@@ -70,7 +75,7 @@ export default {
             yearTo = Number.parseInt(minMaxDate[1].substring(0, 4)),
             monthIntervals = common.getMonthIntervals(yearFrom, yearTo),
             intervals = common.combineDateIntervals([monthIntervals, presencePerDay, pricePerDay], minMaxDate[1]),
-            recType = this.costsTypesData.find(t => t.id === common.hardCoded.monTransportCostTypeId),
+            recType = this.costsTypesStore.records.find(t => t.id === common.hardCoded.monTransportCostTypeId),
             output = [];
   
       presencePerDay.forEach(x => { if (!x.dateTo) x.dateTo = minMaxDate[1]; });
@@ -107,26 +112,28 @@ export default {
     <div
       class="repMonCosts flexColContainer">
 
-      <x-select
+      <table-look-up
         :value="groupsInYear"
-        :data="groupsInYearData"
-        :isMulti="false"
-        @input="(event) => groupsInYear = event">
-      </x-select>
+        :schema="groupsInYearSchema"
+        :records="groupsInYearRecords"
+        displayField="group"
+        @input="groupsInYear = $event">
+      </table-look-up>
 
-      <x-select
+      <table-look-up
         :value="costsTypes"
-        :data="costsTypesData"
-        :isMulti="true"
-        @input="(event) => costsTypes = event">
-      </x-select>
+        :schema="costsTypesStore.schema"
+        :records="costsTypesStore.records"
+        displayField="name"
+        :isMultiSelect="true"
+        @input="costsTypes = $event">
+      </table-look-up>
 
       <TheYearGroupsRep
         v-if="dataReady"
         :groupsInYear="groupsInYear"
         :records="records"
         :recTypes="costsTypes"
-        :recTypesData="costsTypesData"
         sumPropName="eur"
         sumSuffix="€">
       </TheYearGroupsRep>

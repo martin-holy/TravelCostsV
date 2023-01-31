@@ -21,6 +21,20 @@
         "/TravelCostsV/js/controls/xSelect.js",
         "/TravelCostsV/css/controls.css"
       ]
+    },
+    { "version": "v2023.01.31",
+      "files": [
+        "/TravelCostsV/js/controls/xSelect.js",
+        "/TravelCostsV/css/controls.css",
+        "/TravelCostsV/css/dark.css",
+        "/TravelCostsV/js/controls/TableEdit.js",
+        "/TravelCostsV/js/controls/TableGrid.js",
+        "/TravelCostsV/js/controls/TableManager.js",
+        "/TravelCostsV/js/reports/RepCarDrives.js",
+        "/TravelCostsV/js/reports/RepMonCosts.js",
+        "/TravelCostsV/js/reports/RepMonIncomes.js",
+        "/TravelCostsV/js/TheYearGroupsRep.js"
+      ]
     }
   ]
 }

@@ -1,10 +1,10 @@
-import xSelect from './../controls/xSelect.js';
+import TableLookUp from './../controls/TableLookUp.js';
 import TheYearGroupsRep from './../TheYearGroupsRep.js';
 import common from './../common.js';
 
 export default {
   components: {
-    xSelect,
+    TableLookUp,
     TheYearGroupsRep
   },
 
@@ -12,12 +12,18 @@ export default {
     return {
       dataReady: false,
       groupsInYear: 12,
-      groupsInYearData: [
-        { value: 12, name: '1 Month' },
-        { value: 4, name: '3 Months' },
-        { value: 2, name: '6 Months' },
-        { value: 1, name: '1 Year' }
+      groupsInYearRecords: [
+        { id: 12, group: '1 Měsíc' },
+        { id: 4, group: '3 Měsíce' },
+        { id: 2, group: '6 Měsíců' },
+        { id: 1, group: '1 Rok' }
       ],
+      groupsInYearSchema: {
+        properties: [
+          { name: 'id', title: 'Id', type: 'int', required: true, hidden: true },
+          { name: 'group', title: 'Skupina', type: 'text' }
+        ]
+      },
       records: [],
       costsTypes: [],
       costsTypesData: [
@@ -96,12 +102,13 @@ export default {
     <div
       class="repCarDrives flexColContainer">
 
-      <x-select
+      <table-look-up
         :value="groupsInYear"
-        :data="groupsInYearData"
-        :isMulti="false"
-        @input="(event) => groupsInYear = event">
-      </x-select>
+        :schema="groupsInYearSchema"
+        :records="groupsInYearRecords"
+        displayField="group"
+        @input="groupsInYear = $event">
+      </table-look-up>
 
       <TheYearGroupsRep
         v-if="dataReady"

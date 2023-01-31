@@ -1,9 +1,9 @@
-import xSelect from './../controls/xSelect.js';
+import TableLookUp from './../controls/TableLookUp.js';
 import TheYearGroupsRep from './../TheYearGroupsRep.js';
 
 export default {
   components: {
-    xSelect,
+    TableLookUp,
     TheYearGroupsRep
   },
 
@@ -11,15 +11,21 @@ export default {
     return {
       dataReady: false,
       groupsInYear: 12,
-      groupsInYearData: [
-        { value: 12, name: '1 Month' },
-        { value: 4, name: '3 Months' },
-        { value: 2, name: '6 Months' },
-        { value: 1, name: '1 Year' }
+      groupsInYearRecords: [
+        { id: 12, group: '1 Měsíc' },
+        { id: 4, group: '3 Měsíce' },
+        { id: 2, group: '6 Měsíců' },
+        { id: 1, group: '1 Rok' }
       ],
+      groupsInYearSchema: {
+        properties: [
+          { name: 'id', title: 'Id', type: 'int', required: true, hidden: true },
+          { name: 'group', title: 'Skupina', type: 'text' }
+        ]
+      },
       records: [],
       incomesTypes: [],
-      incomesTypesData: []
+      incomesTypesStore: []
     }
   },
 
@@ -27,24 +33,23 @@ export default {
     this.records = await this.getDataFromDb();
     
     // select all costs types
-    for (const type of this.incomesTypesData)
-      this.incomesTypes.push(type.value);
+    for (const type of this.incomesTypesStore.records)
+      this.incomesTypes.push(type.id);
 
     this.dataReady = true;
   },
 
   methods: {
     async getDataFromDb() {
-      this.incomesTypesData = (await this.db.data(this.db.stores.MON_IncomesTypes))
-        .map(x => ({ ...x, value: x.id }))
-        .orderBy('name');
+      this.incomesTypesStore = this.db.stores.MON_IncomesTypes;
 
-      const incomes = (await this.db.data(this.db.stores.MON_Incomes))
+      const itData = await this.db.data(this.db.stores.MON_IncomesTypes),
+            incomes = (await this.db.data(this.db.stores.MON_Incomes))
              .map(rec => ({
                 date: rec.date,
                 eur: rec.eur,
                 desc: rec.desc,
-                type: this.incomesTypesData.find(t => t.id === rec.incomeTypeId) }))
+                type: itData.find(t => t.id === rec.incomeTypeId) }))
               .orderBy('date', false);
 
       for (const rec of incomes) {
@@ -53,10 +58,6 @@ export default {
               
         rec.year = y;
         rec.month = m;
-
-        // Temporary
-        if (!rec.type)
-          rec.type = this.incomesTypesData[0];
       }
 
       return incomes;
@@ -68,25 +69,34 @@ export default {
       class="repMonIncomes flexColContainer">
 
       <x-select
-        :value="groupsInYear"
-        :data="groupsInYearData"
-        :isMulti="false"
-        @input="(event) => groupsInYear = event">
-      </x-select>
-
-      <x-select
         :value="incomesTypes"
         :data="incomesTypesData"
         :isMulti="true"
         @input="(event) => incomesTypes = event">
       </x-select>
 
+      <table-look-up
+        :value="groupsInYear"
+        :schema="groupsInYearSchema"
+        :records="groupsInYearRecords"
+        displayField="group"
+        @input="groupsInYear = $event">
+      </table-look-up>
+
+      <table-look-up
+        :value="incomesTypes"
+        :schema="incomesTypesStore.schema"
+        :records="incomesTypesStore.records"
+        displayField="name"
+        :isMultiSelect="true"
+        @input="incomesTypes = $event">
+      </table-look-up>
+
       <TheYearGroupsRep
         v-if="dataReady"
         :groupsInYear="groupsInYear"
         :records="records"
         :recTypes="incomesTypes"
-        :recTypesData="incomesTypesData"
         sumPropName="eur"
         sumSuffix="€">
       </TheYearGroupsRep>

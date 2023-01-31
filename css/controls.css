@@ -1,5 +1,5 @@
 /* TableGrid */
-.tableGrid table {
+.tableGrid > table {
   border-collapse: collapse;
   white-space: nowrap;
   font-size: 12px;
@@ -8,23 +8,30 @@
   width: fit-content;
 }
 
-.tableGrid table tr:hover td {
+.tableGrid > table > tbody > tr:hover > td {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-.tableGrid table tr {
+.tableGrid > table > tbody > tr {
   border-bottom: 1px solid #24282A;
+  height: 21px;
 }
 
-.tableGrid table td {
+.tableGrid > table > tbody > tr > td,
+.tableGrid > table > thead > tr > th {
   padding: 4px;
 }
 
-.tableGrid table td span {
+.tableGrid > table > td > span {
   padding: 3px;
 }
 
-.tableGrid table th, .tableGrid .gridFixed div {
+.tableGrid > table > thead > tr > th {
+  font-size: 14px;
+  padding: 2px 3px;
+}
+
+.tableGrid .gridFixed div {
   background-color: #24282A;
   border: 1px solid #000000;
   font-size: 14px;
@@ -32,12 +39,13 @@
 }
 
 .tableGrid .gridSource {
-  visibility: hidden;
+  visibility: collapse;
 }
 
 .tableGrid .gridFixed {
   display: flex;
-  position: fixed;
+  position: sticky;
+  top: 0;
 }
 
 .tableGrid .gridFixed div {
@@ -47,10 +55,12 @@
   font-weight: bold;
   text-align: center;
   white-space: nowrap;
+  line-height: 18px;
 }
 
-.tableGrid .gridFixed div:first-child {
-  border-left: 1px solid black;
+.tableGrid .selChar {
+  padding: 0;
+  padding-left: 4px;
 }
 /* End of TableGrid */
 
@@ -65,7 +75,7 @@
   transform: translate(-50%, -20%);
 }
 
-.tableEdit table {
+.tableEdit > form > table {
   width: 100%;
   font-weight: bold;
   background-color: #24282A;
@@ -73,24 +83,24 @@
   border-radius: 2px;
 }
 
-.tableEdit td:first-child {
+.tableEdit > form > table > tr > td:first-child {
   border-bottom: 1px solid #33373A;
   white-space: nowrap;
 }
 
-.tableEdit tr:last-child td:first-child {
+.tableEdit > form > table > tr:last-child td:first-child {
   border-bottom: none;
 }
 
-.tableEdit tr {
+.tableEdit > form > table > tr {
   height: 32px;
 }
 
-.tableEdit td {
+.tableEdit > form > table > tr > td {
   padding-left: 4px;
 }
 
-.tableEdit form > div {
+.tableEdit > form > div {
   text-align: center;
   background-color: #24282A;
   border: 1px solid black;
@@ -100,7 +110,7 @@
   justify-content: center;
 }
 
-.tableEdit button {
+.tableEdit > form > div > button {
   background-color: #2A4151;
   border: 1px solid black;
   border-radius: 2px;
@@ -112,62 +122,49 @@
   font-weight: bold;
 }
 
-select, input {
+input {
   background-color: #33373A;
   color: #CBD0D0;
   font-weight: bold;
   border: 1px solid black;
   border-radius: 2px;
   font-family: sans-serif;
-}
-
-select {
-  height: 26px;
-  width: 100%;
-}
-
-option {
-  font-weight: bold;
-}
-
-input {
   height: 22px;
   width: 200px;
   padding-left: 4px;
 }
 /* End of TableEdit */
 
-/* xSelect */
-.xSelect {
+/* TableLookUp */
+.tableLookUp {
   font-size: 14px;
+  width: 208px;
 }
 
-.xSelect > div {
+.tableLookUp > div:nth-of-type(1) {
   display: flex;
   align-items: center;
   border: 1px solid black;
   border-radius: 2px;
-  height: 24px;
+  min-height: 24px;
   background-color: #33373A;
   padding: 0 2px;
 }
 
-.xSelect .selectedOptions {
+.tableLookUp .selectedRecs {
   flex-grow: 1;
   display: flex;
+  flex-wrap: wrap;
   white-space: nowrap;
-  overflow: hidden;
+  padding: 2px 0;
 }
 
-.xSelect .selectedOptions span {
-/*background-color: #2A4151;
-  border: 1px solid black;
-  border-radius: 2px;*/
-  padding: 0 2px;
-  margin-right: 3px;
+.tableLookUp .selectedRecs span {
+  margin: 1px;
+  padding: 2px;
 }
 
-.xSelect .button {
+.tableLookUp .button {
   background-color: #24282A;
   min-width: 18px;
   height: 18px;
@@ -181,33 +178,17 @@ input {
   justify-content: center;
 }
 
-.xSelect ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 1px 0 0 0;
+.tableLookUp .tableGrid {
   position: absolute;
   z-index: 20;
-  border: 1px solid black;
-  border-radius: 2px;
   max-height: 200px;
-  overflow: auto;
-  background-color: #45474B;
-}
-
-.xSelect li {
-  padding: 2px 5px;
-  cursor: pointer;
-}
-
-.xSelect li:hover {
+  height: auto;
+  width: 206px;
+  border: 1px solid black;
+  border-top: none;
   background-color: #33373A;
 }
-
-.xSelect li div {
-  width: 18px;
-  display: inline-block;
-}
-/* End of xSelect */
+/* End of TableLookUp */
 
 /* InfoCursor */
 .infoCursor {

@@ -14,14 +14,17 @@ export default {
   data () {
     return {
       isEditVisible: false,
-      editRec: null
+      editRec: null,
+      selectedRecs: []
     }
   },
 
   methods: {
-    $_gridItemSelected(rec) {
+    $_gridRecSelected(rec) {
       this.isEditVisible = true;
       this.editRec = rec;
+      this.selectedRecs.length = 0;
+      this.selectedRecs.push(rec);
     },
 
     $_editCanceled() {
@@ -45,9 +48,11 @@ export default {
   template: `
     <table-grid
       ref="theGrid"
+      :key="0"
       :schema="store.schema"
       :records="store.records"
-      @itemSelected="$_gridItemSelected">
+      :selectedRecs="selectedRecs"
+      @recSelected="$_gridRecSelected">
     </table-grid>
 
     <table-edit

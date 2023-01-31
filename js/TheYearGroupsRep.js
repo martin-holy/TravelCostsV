@@ -9,7 +9,6 @@ export default {
     groupsInYear: { type: Number },
     records: { type: Array },
     recTypes: { type: Array },
-    recTypesData: { type: Array },
     sumPropName: { type: String },
     sumSuffix: { type: String }
   },

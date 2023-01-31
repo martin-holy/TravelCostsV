@@ -1,10 +1,13 @@
 export default {
   props: {
     schema: { type: Object },
-    records: { type: Array }
+    records: { type: Array },
+    showSelected: { type: Boolean, default: false },
+    isMultiSelect: { type: Boolean, default: false },
+    selectedRecs: { type: Array, default: [] }
   },
 
-  emits: ['itemSelected'],
+  emits: ['recSelected'],
 
   data () {
     return {
@@ -106,7 +109,7 @@ export default {
     },
 
     $_onScroll(e) {
-      this.$refs.gridFixed.style.left = `-${e.target.scrollLeft}px`;
+      this.$refs.gridFixed.style.left = `${e.target.scrollLeft}px`;
       this.$_appendRows();
     },
 
@@ -118,6 +121,10 @@ export default {
 
       if (spaceForMore && this.loadCount < this.records.length)
         this.loadCount += 10;
+    },
+
+    $_isRecSelected(rec) {
+      return this.selectedRecs.includes(rec) ? '✔' : '';
     }
   },
 
@@ -130,6 +137,9 @@ export default {
       <div
         class="gridFixed"
         ref="gridFixed">
+        <div
+          v-if="showSelected"
+          class="selChar">✔</div>
         <div
           v-for="(prop, index) in storeProps"
           :key="index">
@@ -145,6 +155,9 @@ export default {
           ref="gridSource">
           <tr>
             <th
+              v-if="showSelected"
+              class="selChar">✔</th>
+            <th
               v-for="(prop, index) in storeProps"
               :key="index">
               {{ prop.title }}
@@ -156,7 +169,12 @@ export default {
           <tr
             v-for="rec in gridRecords"
             :key="rec.Id"
-            @click="$emit('itemSelected', rec)">
+            @click="$emit('recSelected', rec)">
+            <td
+              v-if="showSelected"
+              class="selChar">
+              {{ $_isRecSelected(rec) }}
+            </td>
             <td
               v-for="(prop, index) in storeProps"
               :key="index"
