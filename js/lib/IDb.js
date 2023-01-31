@@ -67,7 +67,7 @@ const IDb = {
       args.orderAsc = store.schema.orderAsc;
     }
 
-    if (args.sorted || args.orderBy)
+    if (args.orderBy)
       store.records.orderBy(args.orderBy, args.orderAsc);
   },
 
