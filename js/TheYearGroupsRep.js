@@ -59,7 +59,7 @@ export default {
     repDetail() {
       return this.cursorGroup.types
         .filter(x => this.recTypes.includes(x.type.id))
-        .orderBy('id');
+        .orderBy('type.name');
     }
   },
 
@@ -179,7 +179,7 @@ export default {
               tSumWidth = 0,
               types = group.types
                 .filter(x => recTypes.includes(x.type.id))
-                .orderBy('id');
+                .orderBy('type.name');
 
           for (const type of types) {
             const tWidth = (typePxPerEur === 1
