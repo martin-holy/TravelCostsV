@@ -68,13 +68,6 @@ export default {
     <div
       class="repMonIncomes flexColContainer">
 
-      <x-select
-        :value="incomesTypes"
-        :data="incomesTypesData"
-        :isMulti="true"
-        @input="(event) => incomesTypes = event">
-      </x-select>
-
       <table-look-up
         :value="groupsInYear"
         :schema="groupsInYearSchema"
