@@ -33,6 +33,7 @@ export default {
 
   mounted() {
     this.$_appendRows();
+    this.$_setFixedThead();
   },
 
   updated() {

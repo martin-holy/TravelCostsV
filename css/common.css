@@ -215,6 +215,9 @@ header .title span:last-child {
 .tableGrid > table > thead > th {
   font-size: 14px;
   padding: 2px 3px;
+  border: 1px solid #000000;
+  border-left: 0;
+  border-top: 0;
 }
 
 .tableGrid .gridFixed {
