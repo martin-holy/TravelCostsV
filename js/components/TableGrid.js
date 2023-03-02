@@ -121,14 +121,20 @@ export default {
       if (prop.align)
         style.textAlign = prop.align;
 
-      if (type && type.name === 'select') {
-        const store = this.db.stores[type.source];
-        if (store) {
-          const srcItem = store.records.find(x => x[type.value] === rec[prop.name]);
-          if (srcItem && srcItem.bgColor)
-            style.backgroundColor = srcItem.bgColor;
+      if (type)
+        switch (type.name) {
+          case 'select':
+            const store = this.db.stores[type.source];
+            if (store) {
+              const srcItem = store.records.find(x => x[type.value] === rec[prop.name]);
+              if (srcItem && srcItem.bgColor)
+                style.backgroundColor = srcItem.bgColor;
+            }
+            break;
+          case 'color':
+            style.backgroundColor = rec[prop.name];
+            break;
         }
-      }
 
       if (prop.name === 'bgColor')
         style.backgroundColor = rec[prop.name];
