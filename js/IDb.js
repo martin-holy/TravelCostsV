@@ -298,6 +298,27 @@ const IDb = {
       }
 
     return true;
+  },
+
+  deleteDb() {
+    this.db.close();
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.deleteDatabase(this.dbName);
+      req.onsuccess = () => {
+        this.log('Deleted database successfully');
+        resolve();
+      };
+
+      req.onerror = (e) => {
+        this.log(`Could not delete database. ${e.target.errorCode}`, true);
+        reject();
+      };
+
+      req.onblocked = () => {
+        this.log('Could not delete database due to the operation being blocked.', true);
+        reject();
+      };
+    });
   }
 };
 

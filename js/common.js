@@ -59,10 +59,23 @@ export function attachCommon(db, app) {
 
   db.stores.ADM_AppStores.importDb = (db, rec) => importDb(db);
   db.stores.ADM_AppStores.exportDb = (db, rec) => exportDb(db);
+  db.stores.ADM_AppStores.reset = (db, rec) => reset(db);
   db.stores.ADM_AppStores.functions = [
     { icon: 'a', name: 'importDb', title: 'Import data' },
-    { icon: 'b', name: 'exportDb', title: 'Export data' }
+    { icon: 'b', name: 'exportDb', title: 'Export data' },
+    { icon: 'd', name: 'reset', title: 'Reset application' }
   ];
+}
+
+async function reset(db) {
+  if (!confirm('Do you really want to delete all application data?'))
+    return;
+
+  localStorage.removeItem(`${db.dbName}_dbVersion`);
+  localStorage.removeItem(`${db.dbName}_version`);
+  await caches.delete(db.dbName);
+  await db.deleteDb();
+  window.location.reload(true);
 }
 
 // TODO ještě to poštelovat. promise by mel bejt asi v reader.onload
