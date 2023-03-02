@@ -6,12 +6,10 @@
 :root {
   --bg-color-base: #1E1E1E;
   --accent-color-base: #007ACC;
-  /* --bg-color-base: #33373A; */
   --bg-color-light-2: rgb(255 255 255 / 2%);
   --bg-color-light-10: rgb(255 255 255 / 10%);
   --bg-color-dark-30: rgba(0, 0, 0, 0.3);
   --bg-color-dark-50: rgba(0, 0, 0, 0.5);
-  --bg-color-selected: rgba(0, 0, 0, 0.5);
   --text-color: #FFFFFF;
 }
 
@@ -57,32 +55,26 @@ ul {
 
 header {
   flex-shrink: 0;
-  background: linear-gradient(to right, var(--bg-color-dark-50), var(--bg-color-dark-30));
+  background: linear-gradient(to right, var(--accent-color-base), var(--bg-color-dark-30));
   border: 1px solid black;
   height: 36px;
   display: flex;
   align-items: center;
 }
 
-#toolBar {
+.toolBar {
   display: flex;
   margin: 2px;
 }
 
-.btn {
-  background-color: var(--accent-color-base);
-  border: 1px solid black;
-  border-radius: 2px;
-  cursor: pointer;
-}
-
-#toolBar .btn {
+.toolBar .btn {
   width: 24px;
   height: 24px;
   line-height: 24px;
   text-align: center;
   font-size: 16px;
   margin-right: 2px;
+  cursor: pointer;
 }
 
 .version {
@@ -95,7 +87,6 @@ header {
 header .title {
   margin-left: 35px;
   text-shadow: 2px 2px 2px black;
-  background-color: var(--accent-color-base);
   padding-left: 6px;
   height: 30px;
   display: flex;
@@ -121,9 +112,6 @@ header .title span:last-child {
   position: fixed;
   top: 1px;
   text-align: center;
-  background-color: var(--accent-color-base);
-  border: 1px solid black;
-  border-radius: 2px;
   width: 30px;
   height: 30px;
   line-height: 30px;
@@ -168,7 +156,7 @@ header .title span:last-child {
 }
 
 .theMenu .group {
-  background-color: var(--accent-color-base);
+  background: linear-gradient(to right, var(--accent-color-base), var(--bg-color-dark-30));
   padding-left: 2px;
   border-bottom: 2px solid black !important;
   border-top: 1px solid black;
@@ -177,7 +165,7 @@ header .title span:last-child {
 }
 
 .liDivider {
-  background-color: var(--accent-color-base) !important;
+  background: linear-gradient(to right, var(--accent-color-base), var(--bg-color-dark-30));
   border-bottom: 1px solid black !important;
   cursor: default !important;
   padding-left: 2px !important;

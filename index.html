@@ -38,7 +38,8 @@
           }
         };
 
-        //document.body.style.setProperty('--bg-color-base', appSettings.get('appBgColorBase'));
+        document.body.style.setProperty('--bg-color-base', appSettings.get('appBgColorBase'));
+        document.body.style.setProperty('--accent-color-base', appSettings.get('appAccentColorBase'));
 
         navigator.serviceWorker
           .register('./serviceWorker.js', { scope: '.' })

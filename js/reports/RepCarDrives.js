@@ -105,7 +105,7 @@ export default {
 
     return h('div', { class: 'repCarDrives flexCol flexOne' }, [
       h('header', [
-        h('span', { class: 'title rborder'}, [
+        h('span', { class: 'title'}, [
           h('span', { class: 'icon' }, this.repData.icon ? this.repData.icon : 'T'),
           h('span', this.repData.title)]),
         h(TableLookUp, {

@@ -29,6 +29,7 @@
 "data":[
   {"name":"ADM_AppStoreGroups","records":[{"id":1,"name":"Administration","icon":"D","index":99,"stores":[1,2,3]}]},
   {"name":"ADM_AppSettings","records":[
-    {"key":"appBgColorBase","valueType":{"name":"color"},"value":"#7a8b4b"}
+    {"key":"appBgColorBase","valueType":{"name":"color"},"value":"#1E1E1E"},
+    {"key":"appAccentColorBase","valueType":{"name":"color"},"value":"#007ACC"}
   ]}
 ]}

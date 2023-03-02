@@ -7,8 +7,15 @@ export function attachCommon(db, app) {
         await db.addStore(rec);
         break;
       case 'ADM_AppSettings':
-        if (rec.key === 'appBgColorBase')
-          document.body.style.setProperty('--bg-color-base', rec.value);
+        switch (rec.key) {
+          case 'appBgColorBase':
+            document.body.style.setProperty('--bg-color-base', rec.value);
+            break;
+          case 'appAccentColorBase':
+            document.body.style.setProperty('--accent-color-base', rec.value);
+            break;
+        }
+          
         break;
     }
   });

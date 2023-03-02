@@ -185,7 +185,7 @@ export default {
   render() {
     const toolBar = !this.store || this.isEditVisible
       ? null
-      : h('div', { id: 'toolBar' }, [
+      : h('div', { class: 'toolBar' }, [
           h('div', {
             class: 'btn icon',
             title: 'New record',
@@ -200,7 +200,7 @@ export default {
             : null]);
 
     const header = h('header', [
-      h('div', { class: 'title rborder' }, [
+      h('div', { class: 'title' }, [
         this.store && this.store.schema.icon
           ? h('span', { class: 'icon' }, this.store.schema.icon)
           : null,
