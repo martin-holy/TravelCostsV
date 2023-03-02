@@ -1,0 +1,252 @@
+/* YearGroupsRep */
+.yearGroupsRep .footer {
+  flex-shrink: 0;
+  overflow: auto;
+  height: 125px;
+  color: white;
+  font-size: 14px;
+  text-shadow: 3px 3px 8px black;
+}
+
+.yearGroupsRep .footer .greyBox {
+  background-color: #24282a;
+  border: 1px solid black;
+  margin: 1px;
+  padding: 0 2px;
+}
+
+.yearGroupsRep .footer .spanRow {
+  overflow: auto;
+}
+
+.yearGroupsRep .footer .spanRow span {
+  padding: 0 2px;
+}
+
+.yearGroupsRep .footer .eurText {
+  color: #70dc35;
+}
+
+.yearGroupsRep .footer > ul > li {
+  border-bottom: 1px solid black;
+}
+
+.yearGroupsRep .footer > ul > li:last-child {
+  border-bottom: none;
+}
+
+.yearGroupsRep .footer .typeHeader {
+  display: flex;
+  justify-content: space-between;
+}
+
+.yearGroupsRep .footer .typeHeader span:first-child {
+  font-size: 16px;
+}
+
+.yearGroupsRep .footer li {
+  white-space: nowrap;
+  padding: 2px;
+}
+
+.yearGroupsRep .cursor {
+  height: 40px;
+  position: absolute;
+  left: 0;
+}
+
+.yearGroupsRep .cursor polygon {
+  fill: rgba(0, 0, 0, 0.5);
+  stroke: white;
+  stroke-width: 1;
+}
+
+.yearGroupsRep svg text {
+  font-size: 14px;
+  fill: white;
+  text-shadow: 3px 3px 8px black;
+  dominant-baseline: central;
+  text-anchor: middle;
+}
+
+.yearGroupsRep .infoColumn {
+  flex-shrink: 0;
+}
+
+.yearGroupsRep .infoColumn rect {
+  fill: #24282A;
+  stroke: black;
+}
+
+.yearGroupsRep .infoColumn text.yearName {
+  fill: #ffac00;
+}
+
+.yearGroupsRep .infoColumn text.partSum {
+  font-size: 12px;
+  fill: #70dc35;
+}
+/* End of YearGroupsRep */
+
+/* RepCarDrives, RepMonCosts & RepMonIncomes */
+.repCarDrives header .tableLookUp,
+.repMonCosts header .tableLookUp,
+.repMonIncomes header .tableLookUp {
+  width: 100px;
+  padding-left: 3px;
+}
+
+.repMonCosts > div .tableLookUp,
+.repMonIncomes > div .tableLookUp {
+  width: 100%;
+}
+
+.repCarDrives,
+.repMonCosts,
+.repMonIncomes {
+  background-color: #33373A;
+}
+/* End of RepCarDrives, RepMonCosts & RepMonIncomes */
+
+/* RepCarDrives */
+.repCarDrives .footer > div {
+  padding-bottom: 2px;
+}
+
+.repCarDrives .footer li {
+  border-bottom: none !important;
+}
+
+.repCarDrives .footer span:nth-child(2) {
+  color: #14bcff;
+}
+
+.repCarDrives .footer div span:last-child {
+  font-size: 14px;
+}
+
+.repCarDrives .footer span:last-child {
+  font-size: 12px;
+  color: #70dc35;
+}
+
+.repCarDrives .footer span {
+  padding-right: 3px;
+}
+
+.repCarDrives .footer div span:first-child {
+  color: #ff8400;
+  padding-left: 3px;
+}
+/* End of RepCarDrives */
+
+/* RepGloCountriesStaySum */
+.repGloCountriesStaySum {
+  width: 100%;
+}
+
+.repGloCountriesStaySum svg text {
+  fill: white;
+  text-shadow: 3px 3px 8px black;
+  dominant-baseline: central;
+  text-anchor: start;
+  font-size: 13px;
+}
+
+.repGloCountriesStaySum svg text tspan {
+  fill: #70dc35;
+}
+
+.repGloCountriesStaySum svg rect {
+  stroke: black;
+  stroke-width: 1px;
+}
+
+.repGloCountriesStaySum svg .daysSum {
+  font-size: 50px;
+  text-anchor: middle;
+}
+
+.repGloCountriesStaySum svg .daysSumSpread {
+  font-size: 20px;
+  text-anchor: middle;
+}
+/* End of RepGloCountriesStaySum */
+
+/* RepGloCountriesStay */
+.repGloCountriesStay .cursorDate {
+  position: absolute;
+  left: 22px;
+  width: 90px;
+  z-index: 1;
+  font-size: 14px;
+  border-top: 2px solid #70dc35;
+  padding-left: 16px;
+  color: #70dc35;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.repGloCountriesStay .flexRow {
+  overflow: auto;
+}
+
+.repGloCountriesStay .flexRow > div {
+  overflow: auto;
+}
+
+.repGloCountriesStay rect {
+  stroke: black;
+  fill: #007acc;
+}
+
+.repGloCountriesStay text {
+  text-shadow: 3px 3px 8px black;
+  dominant-baseline: central;
+}
+
+.repGloCountriesStay text.driveName {
+  font-size: 12px;
+  text-anchor: start;
+  fill: white;
+}
+
+.repGloCountriesStay text tspan {
+  fill: #70dc35;
+}
+
+.repGloCountriesStay text.stayDays {
+  text-anchor: start;
+  fill: #70dc35;
+}
+
+.repGloCountriesStay polyline, .repGloCountriesStay line {
+  stroke: #007acc;
+  stroke-width: 2px;
+  fill: none;
+}
+
+.repGloCountriesStay .footer {
+  flex-shrink: 0;
+  height: 65px;
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+  text-shadow: 3px 3px 8px black;
+}
+
+.repGloCountriesStay .footer > div {
+  width: 55px;
+}
+
+.repGloCountriesStay .footer img {
+  margin-left: 2px;
+}
+
+.repGloCountriesStay .footer ul li:nth-child(even){
+  color: #14bcff;
+}
+
+.repGloCountriesStay .footer ul li span {
+  color: #70dc35;
+}
+/* End of RepGloCountriesStay */

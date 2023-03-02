@@ -1,0 +1,5 @@
+# xSelect
+ - close when clicked elsewhere
+
+# repGloCountriesStay
+  - chyba ve vypoctu scrollu

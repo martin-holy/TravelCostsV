@@ -1,15 +1,395 @@
-/* FlexColContainer */
-.flexColContainer {
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-  flex: 1;
-  height: 100%;
-  width: 100%;
+@font-face {
+  font-family: 'CustomIcons';
+  src: url('CustomIcons.ttf') format('truetype');
 }
 
-.flexColContainer .mainContent {
+:root {
+  --bg-color-base: #1E1E1E;
+  --accent-color-base: #007ACC;
+  /* --bg-color-base: #33373A; */
+  --bg-color-light-2: rgb(255 255 255 / 2%);
+  --bg-color-light-10: rgb(255 255 255 / 10%);
+  --bg-color-dark-30: rgba(0, 0, 0, 0.3);
+  --bg-color-dark-50: rgba(0, 0, 0, 0.5);
+  --bg-color-selected: rgba(0, 0, 0, 0.5);
+  --text-color: #FFFFFF;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg-color-base);
+  font-family: sans-serif;
+  color: var(--text-color);
+}
+
+.flexCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.flexOne {
   overflow: auto;
   flex: 1;
 }
-/* End of FlexColContainer */
+
+.icon {
+  font-family: 'CustomIcons';
+  font-size: 20px;
+  font-weight: normal;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  flex-shrink: 0;
+  background: linear-gradient(to right, var(--bg-color-dark-50), var(--bg-color-dark-30));
+  border: 1px solid black;
+  height: 36px;
+  display: flex;
+  align-items: center;
+}
+
+#toolBar {
+  display: flex;
+  margin: 2px;
+}
+
+.btn {
+  background-color: var(--accent-color-base);
+  border: 1px solid black;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+#toolBar .btn {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+  font-size: 16px;
+  margin-right: 2px;
+}
+
+.version {
+  font-size: 10px;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+}
+
+header .title {
+  margin-left: 35px;
+  text-shadow: 2px 2px 2px black;
+  background-color: var(--accent-color-base);
+  padding-left: 6px;
+  height: 30px;
+  display: flex;
+}
+
+header .title span {
+  padding: 2px 6px 2px 0px;
+}
+
+header .title span:last-child {
+  font-size: 22px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.rborder {
+  border: 1px solid black;
+  border-radius: 2px;
+}
+
+/* TheMenu */
+.theMenu > div {
+  position: fixed;
+  top: 1px;
+  text-align: center;
+  background-color: var(--accent-color-base);
+  border: 1px solid black;
+  border-radius: 2px;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  margin: 2px;
+  cursor: pointer;
+  text-shadow: 1px 1px 2px black;
+}
+
+.theMenu ul {
+  position: fixed;
+  background-color: var(--bg-color-base);
+  top: 38px;
+  left: 0px;
+  padding: 0;
+  margin: 0;
+  border: 1px solid black;
+  border-top: none;
+  z-index: 1;
+  overflow: auto;
+  max-height: calc(100% - 40px);
+}
+
+.theMenu li {
+  padding: 6px 30px 6px 10px;
+  border-bottom: 1px solid black;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px black;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.theMenu li:last-child {
+  border-bottom: 0;
+}
+
+.theMenu li:hover {
+  background-color: var(--accent-color-base);
+}
+
+.theMenu li .icon {
+  margin: 0px 4px 0px 2px;
+}
+
+.theMenu .group {
+  background-color: var(--accent-color-base);
+  padding-left: 2px;
+  border-bottom: 2px solid black !important;
+  border-top: 1px solid black;
+  text-shadow: 2px 2px 2px black;
+  cursor: auto;
+}
+
+.liDivider {
+  background-color: var(--accent-color-base) !important;
+  border-bottom: 1px solid black !important;
+  cursor: default !important;
+  padding-left: 2px !important;
+}
+/* End of Menu */
+
+/* TableGrid */
+.tableGrid > table {
+  border-collapse: collapse;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: bold;
+  flex: none !important;
+  width: fit-content;
+}
+
+.tableGrid > table > tbody > tr:hover > td {
+  background-color: var(--accent-color-base);
+}
+
+.tableGrid > table > tbody > tr {
+  border-bottom: 1px solid var(--bg-color-dark-50);
+  height: 21px;
+}
+
+.tableGrid > table > tbody > tr > td,
+.tableGrid > table > thead > tr > th {
+  padding: 4px;
+}
+
+.tableGrid > table > td > span {
+  padding: 3px;
+}
+
+.tableGrid > table > thead > th {
+  font-size: 14px;
+  padding: 2px 3px;
+}
+
+.tableGrid .gridFixed {
+  background-color: var(--accent-color-base);
+  display: flex;
+  position: sticky;
+  top: 0;
+}
+
+.tableGrid .gridFixed div {
+  border: 1px solid #000000;
+  border-left: 0;
+  border-top: 0;
+  font-size: 14px;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px black;
+  text-align: center;
+  white-space: nowrap;
+  padding: 2px 3px;
+  display: inline-block;
+  line-height: 18px;
+}
+
+.tableGrid .gridSource {
+  visibility: collapse;
+}
+
+.tableGrid td.selected {
+  background-color: var(--accent-color-base);
+}
+/* End of TableGrid */
+
+/* TableEdit */
+.tableEdit {
+  background-color: var(--bg-color-base);
+  border: 1px solid var(--accent-color-base);
+  padding: 5px;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translate(-50%, -20%);
+}
+
+.tableEdit > form > table {
+  width: 100%;
+  font-weight: bold;
+  background-color: var(--bg-color-light-2);
+}
+
+.tableEdit > form > table > tr > td:first-child {
+  border-bottom: 1px solid var(--bg-color-dark-50);
+  white-space: nowrap;
+}
+
+.tableEdit > form > table > tr:last-child td:first-child {
+  border-bottom: none;
+}
+
+.tableEdit > form > table > tr {
+  height: 32px;
+}
+
+.tableEdit .subLevel {
+  padding-left: 20px !important;
+}
+
+.tableEdit > form > table > tr > td:first-child {
+  padding-left: 4px;
+  padding-right: 4px;
+  text-shadow: 1px 1px 2px black;
+}
+
+.tableEdit > form > div {
+  text-align: center;
+  margin-top: 5px;
+  display: flex;
+  justify-content: center;
+}
+
+.tableEdit button {
+  background-color: var(--accent-color-base);
+  border: 1px solid black;
+  border-radius: 2px;
+  margin: 3px 5px;
+  width: 80px;
+  color: var(--text-color);
+  text-shadow: 1px 1px 2px black;
+  padding: 3px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+input, textarea {
+  background-color: var(--bg-color-light-10);
+  color: var(--text-color);
+  font-weight: bold;
+  border: 1px solid black;
+  border-radius: 2px;
+  font-family: sans-serif;
+  height: 22px;
+  width: 200px;
+  padding-left: 4px;
+}
+
+textarea {
+  height: 44px;
+}
+/* End of TableEdit */
+
+/* TableLookUp */
+.tableLookUp {
+  font-size: 14px;
+  width: 208px;
+}
+
+.tableLookUp > div:nth-of-type(1) {
+  display: flex;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 2px;
+  min-height: 24px;
+  background-color: var(--bg-color-light-10);
+  padding: 0 2px;
+}
+
+.tableLookUp .selectedRecs {
+  flex-grow: 1;
+  display: flex;
+  flex-wrap: wrap;
+  white-space: nowrap;
+  padding: 2px 0;
+}
+
+.tableLookUp .selectedRecs span {
+  margin: 1px;
+  padding: 2px;
+}
+
+.tableLookUp .button {
+  background-color: var(--bg-color-dark-50);
+  min-width: 18px;
+  height: 18px;
+  border: 1px solid black;
+  border-radius: 2px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-left: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tableLookUp .tableGrid {
+  position: absolute;
+  z-index: 20;
+  max-height: 200px;
+  max-width: 206px;
+  height: auto;
+  width: auto;
+  border: 1px solid black;
+  border-top: none;
+  background-color: var(--bg-color-base);
+}
+/* End of TableLookUp */
+
+/* InfoCursor */
+.infoCursor {
+  height: 20px;
+  position: absolute;
+  left: 0;
+}
+
+.infoCursor polygon {
+  fill: rgba(0, 0, 0, 0.5);
+  stroke: white;
+  stroke-width: 1;
+}
+/* End of InfoCursor */
