@@ -1,31 +1,19 @@
-import TableLookUp from './../controls/TableLookUp.js';
-import TheYearGroupsRep from './../TheYearGroupsRep.js';
+import TableLookUp from '../components/TableLookUp.js';
+import YearGroupsRep from './YearGroupsRep.js';
+
+const { h } = Vue;
 
 export default {
-  components: {
-    TableLookUp,
-    TheYearGroupsRep
+  props: {
+    repData: { type: Object }
   },
-
+  
   data () {
     return {
       dataReady: false,
       groupsInYear: 12,
-      groupsInYearRecords: [
-        { id: 12, group: '1 Měsíc' },
-        { id: 4, group: '3 Měsíce' },
-        { id: 2, group: '6 Měsíců' },
-        { id: 1, group: '1 Rok' }
-      ],
-      groupsInYearSchema: {
-        properties: [
-          { name: 'id', title: 'Id', type: 'int', required: true, hidden: true },
-          { name: 'group', title: 'Skupina', type: 'text' }
-        ]
-      },
       records: [],
-      incomesTypes: [],
-      incomesTypesStore: []
+      incomesTypes: []
     }
   },
 
@@ -33,7 +21,7 @@ export default {
     this.records = await this.getDataFromDb();
     
     // select all costs types
-    for (const type of this.incomesTypesStore.records)
+    for (const type of this.db.stores.MON_IncomesTypes.records)
       this.incomesTypes.push(type.id);
 
     this.dataReady = true;
@@ -41,11 +29,9 @@ export default {
 
   methods: {
     async getDataFromDb() {
-      this.incomesTypesStore = this.db.stores.MON_IncomesTypes;
-
       const itData = await this.db.data(this.db.stores.MON_IncomesTypes),
             incomes = (await this.db.data(this.db.stores.MON_Incomes))
-             .map(rec => ({
+              .map(rec => ({
                 date: rec.date,
                 eur: rec.eur,
                 desc: rec.desc,
@@ -64,35 +50,35 @@ export default {
     }
   },
 
-  template: `
-    <div
-      class="repMonIncomes flexColContainer">
-
-      <table-look-up
-        :value="groupsInYear"
-        :schema="groupsInYearSchema"
-        :records="groupsInYearRecords"
-        displayField="group"
-        @input="groupsInYear = $event">
-      </table-look-up>
-
-      <table-look-up
-        :value="incomesTypes"
-        :schema="incomesTypesStore.schema"
-        :records="incomesTypesStore.records"
-        displayField="name"
-        :isMultiSelect="true"
-        @input="incomesTypes = $event">
-      </table-look-up>
-
-      <TheYearGroupsRep
-        v-if="dataReady"
-        :groupsInYear="groupsInYear"
-        :records="records"
-        :recTypes="incomesTypes"
-        sumPropName="eur"
-        sumSuffix="€">
-      </TheYearGroupsRep>
-
-    </div>`
+  render() {
+    return h('div', { class: 'repMonIncomes flexCol flexOne' }, [
+      h('header', [
+        h('span', { class: 'title rborder'}, [
+          h('span', { class: 'icon' }, this.repData.icon ? this.repData.icon : 'T'),
+          h('span', this.repData.title)]),
+        h(TableLookUp, {
+          valueKey: 'id',
+          valueTitle: 'group',
+          value: this.groupsInYear,
+          schema: this.db.stores.SYS_GroupsInYear.schema,
+          records: this.db.stores.SYS_GroupsInYear.records,
+          onInput: (e) => this.groupsInYear = e.target.value })]),
+      h('div', { class: 'flexCol flexOne' }, [
+        h(TableLookUp, {
+          valueKey: 'id',
+          valueTitle: 'name',
+          value: this.incomesTypes,
+          schema: this.db.stores.MON_IncomesTypes.schema,
+          records: this.db.stores.MON_IncomesTypes.records,
+          isMultiSelect: true,
+          onInput: (e) => this.incomesTypes = e.target.value }),
+        this.dataReady
+          ? h(YearGroupsRep, {
+              groupsInYear: this.groupsInYear,
+              records: this.records,
+              recTypes: this.incomesTypes,
+              sumPropName: 'eur',
+              sumSuffix: '€' })
+          : null])]);
+  }
 }

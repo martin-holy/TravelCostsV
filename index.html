@@ -5,52 +5,57 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <!--<meta http-equiv="Pragma" content="no-cache">-->
-
-    <title>Travel Costs V</title>
-
     <script src="js/vue.global.prod.js"></script>
     <script src="js/extensions.js"></script>
     <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="css/dark.css" />
-    <link rel="stylesheet" href="css/controls.css" />
     <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/custom.css" />
   </head>
 
-  <body>
-    <div id="app"></div>
+  <body class="flexCol">
+    <div id="app" class="flexCol flexOne"></div>
 
     <script type="module">
-      import IDb from './js/lib/IDb.js';
-      import log from './js/lib/SimpleLogger.js';
-      import updateAppCache from './js/lib/AppCache.js'
-      import TheTravelCosts from './js/TheTravelCosts.js';
+      import App from './js/components/App.js';
+      import common from './js/common.js';
+      import custom from './js/custom.js';
+      import IDb from './js/IDb.js';
 
       window.addEventListener('load', async () => {
-        if (await updateAppCache('TravelCostsV'))
+        const manifest = await common.getManifest();
+        document.title = manifest.name;
+        
+        if (await common.updateAppCache(manifest.short_name))
           window.location.reload(true);
+
+        await IDb.init(manifest.short_name);
+        await IDb.data(IDb.stores.ADM_AppSettings);
+
+        window.appSettings = {
+          get: (key, def = null) => {
+            const val = IDb.stores.ADM_AppSettings.records.find(x => x.key === key);
+            return val ? val.value : def;
+          }
+        };
+
+        //document.body.style.setProperty('--bg-color-base', appSettings.get('appBgColorBase'));
 
         navigator.serviceWorker
           .register('./serviceWorker.js', { scope: '.' })
-          .then(() => log('Service Worker: Registered'))
-          .catch(err => log(`Service Worker: Error: ${err}`, true));
+          .then(() => common.log('Service Worker: Registered'))
+          .catch(err => common.log(`Service Worker: Error: ${err}`, true));
+
+        const app = Vue.createApp(App);
+        app.config.globalProperties.log = common.log;
+        app.config.globalProperties.db = IDb;
+        app.config.globalProperties.appName = manifest.name;
+        app.config.globalProperties.appVersion = localStorage.getItem(`${manifest.short_name}_version`);
+
+        common.attachCommon(IDb, app);
+        custom.attachCustom(IDb, app);
+
+        app.mount('#app');
       });
-
-      const { createApp } = Vue;
-      const app = createApp({
-        components: {
-          TheTravelCosts
-        },
-
-        data() {
-          return {}
-        },
-
-        template: `<the-travel-costs></the-travel-costs>`
-      })
-
-      app.config.globalProperties.log = log;
-      app.config.globalProperties.db = IDb;
-      app.mount('#app');
     </script>
   </body>
 </html>

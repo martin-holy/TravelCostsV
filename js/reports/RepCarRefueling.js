@@ -1,13 +1,19 @@
-import common from './../common.js';
+import custom from './../custom.js';
+
+const { h } = Vue;
 
 export default {
+  props: {
+    repData: { type: Object }
+  },
+
   data () {
     return { }
   },
 
-  created() {
-    this.db.data(this.db.stores.CAR_Refueling)
-      .then(data => this.$_render(Array.from(data).orderBy('kmTotal')));
+  async created() {
+    const data = Array.from(await this.db.data(this.db.stores.CAR_Refueling)).orderBy('kmTotal');
+    this.$_render(data);
   },
 
   methods: {
@@ -73,11 +79,11 @@ export default {
         ctx.stroke();
         // consumption
         let consRectWidth = ctx.measureText(rec.consumption).width + 4;
-        common.canvas.drawRect(ctx, rec.x + 20, textTop, consRectWidth, 16, 'rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 1)');
-        common.canvas.drawText(ctx, rec.consumption, rec.x + 22, textTop + 12, 'rgba(255, 255, 255, 1)');
+        custom.canvas.drawRect(ctx, rec.x + 20, textTop, consRectWidth, 16, 'rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 1)');
+        custom.canvas.drawText(ctx, rec.consumption, rec.x + 22, textTop + 12, 'rgba(255, 255, 255, 1)');
         // date
-        common.canvas.drawRect(ctx, rec.x + consRectWidth + 24, textTop, ctx.measureText(rec.date.substring(0, 7)).width + 4, 16, 'rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 1)');
-        common.canvas.drawText(ctx, rec.date.substring(0, 7), rec.x + consRectWidth + 26, textTop + 12, 'rgba(255, 255, 255, 1)');
+        custom.canvas.drawRect(ctx, rec.x + consRectWidth + 24, textTop, ctx.measureText(rec.date.substring(0, 7)).width + 4, 16, 'rgba(0, 0, 0, 0.3)', 'rgba(0, 0, 0, 1)');
+        custom.canvas.drawText(ctx, rec.date.substring(0, 7), rec.x + consRectWidth + 26, textTop + 12, 'rgba(255, 255, 255, 1)');
       }
 
       // Draw km
@@ -93,13 +99,18 @@ export default {
         ctx.moveTo(10, y);
         ctx.lineTo(130, y);
         ctx.stroke();
-        common.canvas.drawText(ctx, km * 1000, 20, y - 2, 'rgba(255, 255, 255, 1)');
+        custom.canvas.drawText(ctx, km * 1000, 20, y - 2, 'rgba(255, 255, 255, 1)');
       }
     }
   },
 
-  template: `
-    <canvas
-      ref="canvas">
-    </canvas>`
+  render() {
+    return h('div', { class: 'repCarDrives flexCol flexOne' }, [
+      h('header',
+        h('span', { class: 'title rborder'}, [
+          h('span', { class: 'icon' }, this.repData.icon ? this.repData.icon : 'T'),
+          h('span', this.repData.title)])),
+      h('div', { class: 'flexOne' },
+        h('canvas', { ref: 'canvas' }))]);
+  }
 }

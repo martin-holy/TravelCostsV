@@ -1,6 +1,10 @@
-import common from './../common.js';
+const { h } = Vue;
 
 export default {
+  props: {
+    repData: { type: Object }
+  },
+
   data () {
     return {
       dataReady: false,
@@ -10,9 +14,9 @@ export default {
 
   computed: {
     rep() {
-      const svgRects = [],
-            svgNameTexts = [],
-            svgPaths = [],
+      if (!this.dataReady) return [];
+
+      const ch = [],
             degPerDay = 360 / this.countries.reduce((acc, cur) => acc + cur.days, 0),
             degPerColor = Math.round(360 / this.countries.length),
             hw = this.$refs.repDiv.clientWidth / 2;
@@ -25,9 +29,11 @@ export default {
         const endAngle = lastAngle + (degPerDay * country.days),
               color = `hsl(${lastColor}, 50%, 40%)`;
 
-        svgRects.push({ x: 20, y: top, height: 20, width: 30, fill: color });
-        svgNameTexts.push({ x: 55, y: top + 11, text: country.name, days: common.daysToYMD(country.days, true) });
-        svgPaths.push({ fill: color, d: this.describeArc(hw, hw, hw - 20, lastAngle, endAngle) });
+        ch.push(h('path', { fill: color, d: this.describeArc(hw, hw, hw - 20, lastAngle, endAngle) }));
+        ch.push(h('rect', { x: 20, y: top, height: 20, width: 30, fill: color }));
+        ch.push(h('text', { x: 55, y: top + 11 }, [
+          country.name,
+          h('tspan', ` ${daysToYMD(country.days, true)}`)]));
 
         lastAngle = endAngle;
         lastColor += degPerColor;
@@ -35,16 +41,14 @@ export default {
         daysSum += country.days;
       }
 
-      return {
+      ch.push(h('circle', { cx: hw, cy: hw, r: hw / 2, fill: '#33373A' }));
+      ch.push(h('text', { x: hw, y: hw - 20, class: 'daysSum' }, daysSum));
+      ch.push(h('text', { x: hw, y: hw + 30, class: 'daysSumSpread' }, daysToYMD(daysSum)));
+
+      return h('svg', {
+        xmlns: 'http://www.w3.org/2000/svg',
         width: hw * 2,
-        height: top,
-        circle: { cx: hw, cy: hw, r: hw / 2, fill: '#33373A' },
-        sumText: { x: hw, y: hw - 20, class: 'daysSum', text: daysSum },
-        sumTextSpread: { x: hw, y: hw + 30, class: 'daysSumSpread', text: common.daysToYMD(daysSum) },
-        svgRects: svgRects,
-        svgNameTexts: svgNameTexts,
-        svgPaths: svgPaths
-      };
+        height: top }, ch);
     }
   },
 
@@ -64,7 +68,7 @@ export default {
               if (!stay.dateTo)
                 stay.dateTo = new Date(Date.now()).toYMD();
               if (!stay.days)
-                stay.days = common.numberOfDaysBetween(stay);
+                stay.days = numberOfDaysBetween(stay.dateFrom, stay.dateTo);
       
               return stay; })
             .reduce((acc, cur) => acc + cur.days, 0);
@@ -100,60 +104,14 @@ export default {
     }
   },
 
-  template: `
-    <div
-      class="repGloCountriesStaySum"
-      ref="repDiv">
-
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        v-if="dataReady"
-        :width="rep.width"
-        :height="rep.height">
-
-        <rect
-          v-for="(rec, index) in rep.svgRects"
-          :key="index"
-          :x="rec.x"
-          :y="rec.y"
-          :width="rec.width"
-          :height="rec.height"
-          :fill="rec.fill" />
-
-        <text
-          v-for="(rec, index) in rep.svgNameTexts"
-          :key="index"
-          :x="rec.x"
-          :y="rec.y">
-          {{ rec.text }} <tspan>{{ rec.days }}</tspan>
-        </text>
-
-        <path
-          v-for="(rec, index) in rep.svgPaths"
-          :key="index"
-          :fill="rec.fill"
-          :d="rec.d" />
-
-        <circle
-          :cx="rep.circle.cx"
-          :cy="rep.circle.cy"
-          :r="rep.circle.r"
-          :fill="rep.circle.fill" />
-
-        <text
-          :x="rep.sumText.x"
-          :y="rep.sumText.y"
-          :class="rep.sumText.class">
-          {{ rep.sumText.text }}
-        </text>
-
-        <text
-          :x="rep.sumTextSpread.x"
-          :y="rep.sumTextSpread.y"
-          :class="rep.sumTextSpread.class">
-          {{ rep.sumTextSpread.text }}
-        </text>
-      </svg>
-
-    </div>`
+  render() {
+    return h('div', {
+      class: 'repGloCountriesStaySum flexCol flexOne',
+      ref: 'repDiv' },
+      h('header',
+        h('span', { class: 'title rborder'}, [
+          h('span', { class: 'icon' }, this.repData.icon ? this.repData.icon : 'T'),
+          h('span', this.repData.title)])),
+      h('div', { class: 'flexOne' }, this.rep));
+  }
 }

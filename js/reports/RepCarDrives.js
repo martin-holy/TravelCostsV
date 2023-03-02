@@ -1,29 +1,18 @@
-import TableLookUp from './../controls/TableLookUp.js';
-import TheYearGroupsRep from './../TheYearGroupsRep.js';
-import common from './../common.js';
+import TableLookUp from '../components/TableLookUp.js';
+import YearGroupsRep from './YearGroupsRep.js';
+import custom from './../custom.js';
+
+const { h } = Vue;
 
 export default {
-  components: {
-    TableLookUp,
-    TheYearGroupsRep
+  props: {
+    repData: { type: Object }
   },
 
   data () {
     return {
       dataReady: false,
       groupsInYear: 12,
-      groupsInYearRecords: [
-        { id: 12, group: '1 Měsíc' },
-        { id: 4, group: '3 Měsíce' },
-        { id: 2, group: '6 Měsíců' },
-        { id: 1, group: '1 Rok' }
-      ],
-      groupsInYearSchema: {
-        properties: [
-          { name: 'id', title: 'Id', type: 'int', required: true, hidden: true },
-          { name: 'group', title: 'Skupina', type: 'text' }
-        ]
-      },
       records: [],
       costsTypes: [],
       costsTypesData: [
@@ -43,14 +32,14 @@ export default {
       const drives = (await this.db.data(this.db.stores.CAR_Drives))
               .map(x => ({ date: x.date, eur: x.eur, km: x.km, desc: x.desc, type: this.costsTypesData[0] })),
             pricePerDay = Array.from(await this.db.data(this.db.stores.CAR_PricePerDay)),
-            minMaxDate = common.getMinMaxDatesFromRange(pricePerDay),
+            minMaxDate = getMinMaxDatesFromRange(pricePerDay),
             yearFrom = Number.parseInt(minMaxDate[0].substring(0, 4)),
             yearTo = Number.parseInt(minMaxDate[1].substring(0, 4)),
-            monthIntervals = common.getMonthIntervals(yearFrom, yearTo),
+            monthIntervals = custom.getMonthIntervals(yearFrom, yearTo),
             insAndMot = [];
 
-      common.mapDataToIntervals(pricePerDay, 'prices', monthIntervals);
-      common.splitPriceInIntervals(monthIntervals);
+      custom.mapDataToIntervals(pricePerDay, 'prices', monthIntervals);
+      custom.splitPriceInIntervals(monthIntervals);
   
       for (const i of monthIntervals) {
         insAndMot.push({
@@ -98,47 +87,43 @@ export default {
     }
   },
 
-  template: `
-    <div
-      class="repCarDrives flexColContainer">
+  render() {
+    const footerSlot = (cursorGroup) => {
+      return [
+        h('div', [
+          h('span', 'Pojištění a technická'),
+          h('span', `${this.getGroupSum(cursorGroup.cursorGroup)}€`),
+          h('span', 'Celkem'),
+          h('span', `${this.getGroupSumTotal(cursorGroup.cursorGroup)}€`)]),
+        h('ul', this.getGroupDrives(cursorGroup.cursorGroup).map((drive, index) => {
+          return h('li', { key: index }, [
+            h('span', drive.date.split('-').join('.')),
+            h('span', drive.desc),
+            h('span', `${drive.km} km`),
+            h('span', `${drive.eur}€`)])}))];
+    };
 
-      <table-look-up
-        :value="groupsInYear"
-        :schema="groupsInYearSchema"
-        :records="groupsInYearRecords"
-        displayField="group"
-        @input="groupsInYear = $event">
-      </table-look-up>
-
-      <TheYearGroupsRep
-        v-if="dataReady"
-        v-slot="{ cursorGroup }"
-        :groupsInYear="groupsInYear"
-        :records="records"
-        :recTypes="costsTypes"
-        :recTypesData="costsTypesData"
-        sumPropName="km"
-        sumSuffix="">
-
-        <div>
-          <span>Insurance and MOT</span>
-          <span>{{ getGroupSum(cursorGroup) }}€</span>
-          <span>Total</span>
-          <span>{{ getGroupSumTotal(cursorGroup) }}€</span>
-        </div>
-
-        <ul>
-          <li
-            v-for="(drive, index) in getGroupDrives(cursorGroup)"
-            :key="index">
-            <span>{{ drive.date.split('-').join('.') }}</span>
-            <span>{{ drive.desc }}</span>
-            <span>{{ drive.km }} km</span>
-            <span>{{ drive.eur }}€</span>
-          </li>
-        </ul>
-
-      </TheYearGroupsRep>
-
-    </div>`
+    return h('div', { class: 'repCarDrives flexCol flexOne' }, [
+      h('header', [
+        h('span', { class: 'title rborder'}, [
+          h('span', { class: 'icon' }, this.repData.icon ? this.repData.icon : 'T'),
+          h('span', this.repData.title)]),
+        h(TableLookUp, {
+          valueKey: 'id',
+          valueTitle: 'group',
+          value: this.groupsInYear,
+          schema: this.db.stores.SYS_GroupsInYear.schema,
+          records: this.db.stores.SYS_GroupsInYear.records,
+          onInput: (e) => this.groupsInYear = e.target.value })]),
+      h('div', { class: 'flexCol flexOne' }, [
+        this.dataReady
+          ? h(YearGroupsRep, {
+              groupsInYear: this.groupsInYear,
+              records: this.records,
+              recTypes: this.costsTypes,
+              sumPropName: 'km',
+              sumSuffix: '' }, {
+                footer: footerSlot })
+          : null])]);
+  }
 }

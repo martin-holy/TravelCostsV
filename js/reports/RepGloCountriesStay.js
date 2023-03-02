@@ -1,9 +1,11 @@
 import common from './../common.js';
-import InfoCursor from './../controls/InfoCursor.js';
+import InfoCursor from '../components/InfoCursor.js';
+
+const { h } = Vue;
 
 export default {
-  components: {
-    InfoCursor
+  props: {
+    repData: { type: Object }
   },
 
   data () {
@@ -26,41 +28,41 @@ export default {
 
   computed: {
     rep() {
-      const svgCRects = [],
-            svgCTexts = [],
-            svgCLines = [],
-            svgCImages = [],
-            svgDRects = [],
-            svgDTexts = [],
-            svgDLines = [];
       let top = 0,
           nameTop = 0,
-          daysTotal = 0,
-          svgCHeight = 0,
-          svgDHeight = 0;
-  
+          daysTotal = 0;
+
       // Countries Stay
+      const cd = [];
+
       for (const stay of this.countries) {
         const height = stay.days * this.pxPerDayCountries,
               halfTop = top + (height / 2);
-  
+
         nameTop = halfTop - nameTop < 25
           ? nameTop + 25
           : halfTop;
 
-        svgCTexts.push({ x: 85, y: nameTop, class: 'stayDays', text: stay.days });
-        svgCLines.push({ x1: 30, y1: halfTop, x2: 52, y2: nameTop });
-        svgCImages.push({ x: 50, y: nameTop - 10, height: 21, flag: stay.code});
-        svgCRects.push({ x: 10, y: top, width: 20, height: height });
-  
+        cd.push(h('rect', { x: 10, y: top, width: 20, height: height }));
+        cd.push(h('text', { x: 85, y: nameTop, class: 'stayDays' }, stay.days));
+        cd.push(h('line', { x1: 30, y1: halfTop, x2: 52, y2: nameTop }));
+        cd.push(h('image', { x: 50, y: nameTop - 10, height: 21, href: `./img/flags/${stay.code}.png`}));
+
         top += height;
         daysTotal += stay.days;
       }
 
-      svgCHeight = top;
-      svgDHeight = daysTotal * this.pxPerDayDrives;
-  
+      const countries = h('div', {
+        ref: 'countries',
+        onScroll: (e) => this.$_onScroll(e) }, [
+        h('svg', {
+          xmlns: 'http://www.w3.org/2000/svg',
+          width: 120,
+          height: top }, cd)]);
+
       // Drives
+      const dd = [];
+
       top = 0;
       nameTop = 0;
 
@@ -72,26 +74,22 @@ export default {
           ? nameTop + 15
           : halfTop;
 
-        svgDTexts.push({ x: 40, y: nameTop, class: 'driveName', name: drive.name, days: drive.days });
-        svgDLines.push({ x1: 20, y1: halfTop, x2: 38, y2: nameTop });
-        svgDRects.push({ x: 0, y: top, width: 20, height: height });
+        dd.push(h('rect', { x: 0, y: top, width: 20, height: height }));
+        dd.push(h('text', { x: 40, y: nameTop, class: 'driveName' }, [drive.name, h('tspan', drive.days)]));
+        dd.push(h('line', { x1: 20, y1: halfTop, x2: 38, y2: nameTop }));
   
         top += height;
       }
 
-      return {
-        cWidth: 120,
-        cHeight: svgCHeight,
-        dWidth: 250,
-        dHeight: svgDHeight,
-        cRects: svgCRects,
-        cTexts: svgCTexts,
-        cLines: svgCLines,
-        cImages: svgCImages,
-        dRects: svgDRects,
-        dTexts: svgDTexts,
-        dLines: svgDLines
-      };
+      const drives = h('div', {
+        ref: 'drives',
+        onScroll: (e) => this.$_onScroll(e) }, [
+        h('svg', {
+          xmlns: 'http://www.w3.org/2000/svg',
+          width: 250,
+          height: daysTotal * this.pxPerDayDrives }, dd)]);
+
+      return { countries: countries, drives: drives };
     },
 
     info() {
@@ -108,23 +106,30 @@ export default {
   
       const ul = [],
             drive = getRec(this.drives, this.infoForDays),
-            country = getRec(this.countries, this.infoForDays),
-            countryCode = country ? country.code : '';
+            country = getRec(this.countries, this.infoForDays);
   
       if (country) {
-        ul.push({ text: `${df(country.dateFrom)} - ${df(country.dateTo)} - `, span: `${country.days} days` });
-        ul.push({ text: country.name });
+        ul.push(h('li', [
+          `${df(country.dateFrom)} - ${df(country.dateTo)} - `,
+          h('span', `${country.days} days`)]));
+        ul.push(h('li', country.name));
       }
   
       if (drive) {
-        ul.push({ text: `${df(drive.dateFrom)} - ${df(drive.dateTo)} - `, span: `${drive.days} days` });
-        ul.push({ text: `${drive.name} `, span: `${drive.km} km` });
+        ul.push(h('li', [
+          `${df(drive.dateFrom)} - ${df(drive.dateTo)} - `,
+          h('span', `${drive.days} days`)]));
+        ul.push(h('li', [
+          `${drive.name} `,
+          h('span', `${drive.km} km`)]));
       }
 
-      return {
-        flag: countryCode,
-        ul: ul
-      };
+      return h('div', { class: 'footer' }, [
+        h('div', 
+          country
+            ? h('img', { src: `./img/flags/${country.code}.png` })
+            : null),
+        h('ul', ul)]);
     }
   },
 
@@ -159,7 +164,7 @@ export default {
 
           o.days = cs.days
             ? cs.days
-            : common.numberOfDaysBetween(o);
+            : numberOfDaysBetween(o.dateFrom, o.dateTo);
 
           return o;
         });
@@ -178,7 +183,7 @@ export default {
             km: d.km
           };
 
-          o.days = common.numberOfDaysBetween(o) - 1;
+          o.days = numberOfDaysBetween(o.dateFrom, o.dateTo) - 1;
           lastDate = d.date;
 
           return o;
@@ -222,128 +227,24 @@ export default {
     }
   },
 
-  template: `
-    <div
-      class="repGloCountriesStay flexColContainer">
-
-      <InfoCursor
-        :min="infoCursor.min"
-        :max="infoCursor.max"
-        :pos="infoCursor.pos"
-        @changed="$_infoCursorChanged($event)">
-      </InfoCursor>
-
-      <div
-        class="cursorDate"
-        :style="{ top: infoCursor.pos + 'px' }">
-        {{ infoCursor.date }}
-      </div>
-      
-      <div class="mainContent">
-
-        <div
-          ref="countries"
-          @scroll="$_onScroll($event)">
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            v-if="dataReady"
-            :width="rep.cWidth"
-            :height="rep.cHeight">
-
-            <rect
-              v-for="(rec, index) in rep.cRects"
-              :key="index"
-              :x="rec.x"
-              :y="rec.y"
-              :width="rec.width"
-              :height="rec.height" />
-
-            <text
-              v-for="(rec, index) in rep.cTexts"
-              :key="index"
-              :x="rec.x"
-              :y="rec.y"
-              :class="rec.class">
-              {{ rec.text }}
-            </text>
-
-            <line
-              v-for="(rec, index) in rep.cLines"
-              :key="index"
-              :x1="rec.x1"
-              :y1="rec.y1"
-              :x2="rec.x2"
-              :y2="rec.y2" />
-
-            <image
-              v-for="(rec, index) in rep.cImages"
-              :key="index"
-              :x="rec.x"
-              :y="rec.y"
-              :height="rec.height"
-              :href="'./img/flags/' + rec.flag + '.png'" />
-
-          </svg>
-        </div>
-
-        <div
-          ref="drives"
-          @scroll="$_onScroll($event)">
-
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            v-if="dataReady"
-            :width="rep.dWidth"
-            :height="rep.dHeight">
-
-            <rect
-              v-for="(rec, index) in rep.dRects"
-              :key="index"
-              :x="rec.x"
-              :y="rec.y"
-              :width="rec.width"
-              :height="rec.height" />
-
-            <text
-              v-for="(rec, index) in rep.dTexts"
-              :key="index"
-              :x="rec.x"
-              :y="rec.y"
-              :class="rec.class">
-              {{ rec.name }} <tspan>{{ rec.days }}</tspan>
-            </text>
-
-            <line
-              v-for="(rec, index) in rep.dLines"
-              :key="index"
-              :x1="rec.x1"
-              :y1="rec.y1"
-              :x2="rec.x2"
-              :y2="rec.y2" />
-
-          </svg>
-        </div>
-
-      </div>
-
-      <div class="footer">
-        <div>
-          <img
-            v-if="info.flag"
-            :src="'./img/flags/' + info.flag + '.png'" />
-        </div>
-        <ul>
-          <li
-            v-for="(li, index) in info.ul"
-            :key="index">
-            {{ li.text }}
-            <span
-              v-if="li.span">
-              {{ li.span }}
-            </span>
-          </li>
-        </ul>
-      </div>
-    </div>`
+  render() {
+    return h('div', { class: 'repGloCountriesStay flexCol flexOne' }, [
+      h(InfoCursor, {
+        min: this.infoCursor.min,
+        max: this.infoCursor.max,
+        pos: this.infoCursor.pos,
+        onChanged: (e) => this.$_infoCursorChanged(e) }),
+      h('div', {
+        class: 'cursorDate',
+        style: { top: `${this.infoCursor.pos}px` } },
+        this.infoCursor.date),
+      h('header',
+        h('span', { class: 'title rborder'}, [
+          h('span', { class: 'icon' }, this.repData.icon ? this.repData.icon : 'T'),
+          h('span', this.repData.title)])),
+      h('div', { class: 'flexRow' }, [
+        this.rep.countries,
+        this.rep.drives]),
+      this.info]);
+  }
 }

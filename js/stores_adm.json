@@ -1,0 +1,34 @@
+{"stores":[
+  {"id":1,"icon":"R","name":"ADM_AppStores","title":"Stores","orderBy":"name","orderAsc":true,"properties":[
+    {"name":"id","title":"Id","type":{"name":"number","step":1,"min":0},"required":true,"hidden":true},
+    {"name":"icon","title":"Icon","type":{"name":"text"}},
+    {"name":"name","title":"Name","type":{"name":"text"},"required":true},
+    {"name":"title","title":"Title","type":{"name":"text"},"required":true},
+    {"name":"orderBy","title":"Order by","type":{"name":"text"}},
+    {"name":"orderAsc","title":"Order asc","type":{"name":"checkbox"},"default":true},
+    {"name":"properties","title":"Properties","type":{"name":"array","schema":{"properties":[
+      {"name":"name","title":"Name","type":{"name":"text"},"required":true},
+      {"name":"title","title":"Title","type":{"name":"text"},"required":true},
+      {"name":"type","title":"Type","type":{"name":"type"},"required":true},
+      {"name":"align","title":"Align","type":{"name":"select","source":"SYS_Align","value":"value","title":"value"}},
+      {"name":"default","title":"Default","type":{"name":"variable","typeProp":"type"}},
+      {"name":"required","title":"Required","type":{"name":"checkbox"}},
+      {"name":"readonly","title":"Read only","type":{"name":"checkbox"}},
+      {"name":"hidden","title":"Hidden","type":{"name":"checkbox"}}]}}}]},
+  {"id":2,"icon":"S","name":"ADM_AppStoreGroups","title":"Store groups","orderBy":"index","orderAsc":true,"properties":[
+    {"name":"id","title":"Id","type":{"name":"number","step":1,"min":0},"required":true,"hidden":true},
+    {"name":"icon","title":"Icon","type":{"name":"text"},"required":true},
+    {"name":"name","title":"Name","type":{"name":"text"},"required":true},
+    {"name":"index","title":"Index","type":{"name":"number","step":1,"min":0},"required":true},
+    {"name":"stores","title":"Stores","type":{"name":"selectMulti","source":"ADM_AppStores","value":"id","title":"name"},"required":true}]},
+  {"id":3,"icon":"L","name":"ADM_AppSettings","title":"Settings","orderBy":"key","orderAsc":true,"properties":[
+    {"name":"id","title":"Id","type":{"name":"number","step":1,"min":0},"required":true,"hidden":true},
+    {"name":"key","title":"Key","type":{"name":"text"},"required":true},
+    {"name":"valueType","title":"Type","type":{"name":"type"},"required":true},
+    {"name":"value","title":"Value","type":{"name":"variable","typeProp":"valueType"},"required":true}]}],
+"data":[
+  {"name":"ADM_AppStoreGroups","records":[{"id":1,"name":"Administration","icon":"D","index":99,"stores":[1,2,3]}]},
+  {"name":"ADM_AppSettings","records":[
+    {"key":"appBgColorBase","valueType":{"name":"color"},"value":"#7a8b4b"}
+  ]}
+]}

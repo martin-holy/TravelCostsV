@@ -1,24 +1,24 @@
-import common from './../common.js';
-import TableGrid from './../controls/TableGrid.js';
+import TableGrid from '../components/TableGrid.js';
+import custom from './../custom.js';
+
+const { h } = Vue;
 
 export default {
-  components: {
-    TableGrid
+  props: {
+    repData: { type: Object }
   },
 
   data () {
     return {
       gridSchema: { properties: [
-        { name: 'payerId', title: 'Zaplatil', type: 'select', source: { name: 'GLO_People', property: 'name' }},
-        { name: 'debtorId', title: 'Komu', type: 'select', source: { name: 'GLO_People', property: 'name' }},
-        { name: 'eurCalc', title: 'EUR', align: 'right' }]},
+        { name: 'payerId', title: 'Zaplatil', type: { name: 'select', source: 'GLO_People', value: 'id', title: 'name' }},
+        { name: 'debtorId', title: 'Komu', type: { name: 'select', source: 'GLO_People', value: 'id', title: 'name' }},
+        { name: 'eurCalc', title: 'EUR', type: { name: 'number' }, align: 'right' }]},
       gridRecords: []
     }
   },
 
   async created() {
-    this.gridSchema.properties[0].source.store = this.db.stores.GLO_People;
-    this.gridSchema.properties[1].source.store = this.db.stores.GLO_People;
     this.gridRecords = await this.$_getRecords();
   },
 
@@ -26,16 +26,17 @@ export default {
     async $_getPricesByDay() {
       const presencePerDay = Array.from(await this.db.data(this.db.stores.CAR_PresencePerDay)),
             pricesPerDay = Array.from(await this.db.data(this.db.stores.CAR_PricePerDay)),
-            intervals = common.combineDateIntervals([presencePerDay], new Date().toYMD());
+            intervals = custom.combineDateIntervals([presencePerDay], new Date().toYMD());
     
-      common.mapDataToIntervals(presencePerDay, 'people', intervals);
-      common.mapDataToIntervals(pricesPerDay, 'prices', intervals);
-      common.splitPriceInIntervals(intervals);
+      custom.mapDataToIntervals(presencePerDay, 'people', intervals);
+      custom.mapDataToIntervals(pricesPerDay, 'prices', intervals);
+      custom.splitPriceInIntervals(intervals);
       
       return intervals;
     },
 
     async $_getRecords() {
+      const gloPeopleCarryId = appSettings.get('gloPeopleCarryId');
       let presencePerDay = Array.from(await this.db.data(this.db.stores.CAR_PresencePerDay)),
           intervals = await this.$_getPricesByDay(),
           people = [];
@@ -71,7 +72,7 @@ export default {
           pair = { payerId: d.payerId, debtorId: d.debtorId, eur: 0 };
           pairs.push(pair);
         }
-        pair.eur += await common.amountInEUR(this.db, d);
+        pair.eur += await custom.amountInEUR(this.db, d);
       }
     
       // COMBINATING DEBTS RECORDS WITH DRIVES, MOT AND INSURANCE
@@ -82,10 +83,10 @@ export default {
           ? 0 :
           pair.eur - mp.eur;
     
-        if (pair.debtorId === common.hardCoded.gloPeopleCarryId)
+        if (pair.debtorId === gloPeopleCarryId)
           pair.eurCalc -= people.find(p => p.id === pair.payerId).eur;
     
-        if (pair.payerId === common.hardCoded.gloPeopleCarryId)
+        if (pair.payerId === gloPeopleCarryId)
           pair.eurCalc += people.find(p => p.id === pair.debtorId).eur;
       }
     
@@ -98,12 +99,15 @@ export default {
     }
   },
 
-  template: `
-    <div class="repMonDebtsCalc">
-      <table-grid
-        ref="theGrid"
-        :schema="gridSchema"
-        :records="gridRecords">
-      </table-grid>
-    </div>`
+  render() {
+    return h('div', { class: 'repMonDebtsCalc flexCol flexOne' },
+      h('header',
+        h('span', { class: 'title rborder'}, [
+          h('span', { class: 'icon' }, this.repData.icon ? this.repData.icon : 'T'),
+          h('span', this.repData.title)])),
+      h('div', { class: 'flexOne' },
+        h(TableGrid, {
+          schema: this.gridSchema,
+          records: this.gridRecords})));
+  }
 }
