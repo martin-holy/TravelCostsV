@@ -1,6 +1,7 @@
 {"stores":[
   {"id":10,"icon":"P","name":"GLO_Countries","title":"Země","orderBy":"name","orderAsc":true,"properties":[
     {"name":"id","title":"Id","type":{"name":"number","step":1,"min":0},"required":true,"hidden":true},
+    {"name":"flag","title":"Vlajka","type":{"name":"text"}},
     {"name":"name","title":"Jméno","type":{"name":"text"},"required":true},
     {"name":"code","title":"Kód","type":{"name":"text"},"required":true}]},
   {"id":11,"icon":"O","name":"GLO_CountriesStay","title":"Pobyt v zemích","orderBy":"dateFrom","orderAsc":false,"properties":[
