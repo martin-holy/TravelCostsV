@@ -205,7 +205,8 @@ async function monUpdateMissingRates(db) {
   const oldRates = await db.data(db.stores.MON_Rates),
         currencies = await db.data(db.stores.MON_Currencies),
         monEURCurrencyId = appSettings.get('monEURCurrencyId'),
-        openExchangeRatesApiId = appSettings.get('openExchangeRatesApiId');
+        openExchangeRatesApiId = appSettings.get('openExchangeRatesApiId'),
+        dateNow = new Date(Date.now()).toYMD();
   let costsToUpdate = [],
       incomesToUpdate = [],
       newRates = [];
@@ -214,7 +215,7 @@ async function monUpdateMissingRates(db) {
     const storeData = await db.data(db.stores[storeName]),
           toUpdate = [];
     for (const rec of storeData) {
-      if (rec.currencyId === monEURCurrencyId) continue;
+      if (rec.currencyId === monEURCurrencyId || rec.date >= dateNow) continue;
       if (oldRates.find(x => x.date === rec.date && x.currencyId === rec.currencyId) != undefined) continue;
       toUpdate.push(rec);
       if (newRates.find(x => x.date === rec.date && x.currencyId === rec.currencyId) != undefined) continue;
@@ -238,16 +239,13 @@ async function monUpdateMissingRates(db) {
         const code = currencies.find(x => x.id === rate.currencyId).code;
         rate.amount = (json.rates[code] / json.rates['EUR']).toFixed(4);
       }).catch((error) => {
-        db.log(error.message, true);
+        db.log(`${error.message}, date: ${rate.date}`, true);
         errGettingRates = true;
       });
     
     if (errGettingRates)
       break;
   }
-
-  if (errGettingRates)
-    return;
 
   newRates = newRates.filter(x => x.amount);
 

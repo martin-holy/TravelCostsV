@@ -3,6 +3,11 @@
       "files": [
         "/TravelCostsV/css/common.css"
       ]
+    },
+    { "version": "v2023.03.04",
+      "files": [
+        "/TravelCostsV/js/custom.js"
+      ]
     }
   ]
 }
