@@ -175,14 +175,16 @@ export function log(msg, withAlert = false) {
     alert(msg);
 }
 
-export async function fetchJson(url) {
-  const res = await fetch(url);
+export async function fetchJson(url, withAlert = true) {
+  try {
+    const res = await fetch(url);
 
-  if (res.ok && res.status === 200 && res.type === 'basic')
-    return res.json();
-
-  log(`Network response was not ok while fetching '${res.url}'.`, true);
-  return null;
+    if (res.ok && res.status === 200 && res.type === 'basic')
+      return res.json();
+  } catch (error) {
+    log(`Network response was not ok while fetching '${url}'.`, withAlert);
+    return null;
+  }
 }
 
 export async function getManifest() {
@@ -192,7 +194,7 @@ export async function getManifest() {
 // delete files from updates.json from cache
 // so that new version is fetched
 export async function updateAppCache(appName) {
-  const json = await fetchJson('./updates.json');
+  const json = await fetchJson('./updates.json', false);
   
   if (!json) return false;
 

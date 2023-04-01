@@ -8,6 +8,11 @@
       "files": [
         "/TravelCostsV/js/custom.js"
       ]
+    },
+    { "version": "v2023.04.01",
+      "files": [
+        "/TravelCostsV/js/common.js"
+      ]
     }
   ]
 }
