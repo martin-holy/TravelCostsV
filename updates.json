@@ -14,9 +14,10 @@
         "/TravelCostsV/js/common.js"
       ]
     },
-    { "version": "v2023.05.25",
+    { "version": "v2023.05.25.1",
       "files": [
-        "/TravelCostsV/js/TableManager.js"
+        "/TravelCostsV/js/TableManager.js",
+        "/TravelCostsV/css/CustomIcons.ttf"
       ]
     }
   ]
