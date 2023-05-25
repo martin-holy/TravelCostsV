@@ -59,6 +59,10 @@ export default {
   methods: {
     $_onGridRecSelected(rec) {
       this.recBackUp = JSON.parse(JSON.stringify(rec));
+      this.$_setEditRec(rec);
+    },
+
+    $_setEditRec(rec) {
       this.editRec = rec;
       this.isEditVisible = true;
       this.selectedRecs.length = 0;
@@ -142,13 +146,16 @@ export default {
     },
 
     $_editRecNew() {
-      this.editRec = this.$_getNewRec();
-      this.isEditVisible = true;
-      this.selectedRecs.length = 0;
-      this.selectedRecs.push(this.editRec);
+      this.$_setEditRec(this.$_getNewRec());
 
       if (this.editArrayPropStoreRec)
         this.editArrayPropStoreRec[this.editArrayProp.name].push(this.editRec);
+    },
+
+    $_editRecClone() {
+      let clone = JSON.parse(JSON.stringify(this.editRec));
+      delete clone['id'];
+      this.$_setEditRec(clone);
     },
 
     $_getNewRec() {
@@ -183,21 +190,34 @@ export default {
   },
 
   render() {
-    const toolBar = !this.store || this.isEditVisible
-      ? null
-      : h('div', { class: 'toolBar' }, [
-          h('div', {
+    let toolBar = null;
+    if (this.store) {
+      let buttons = [];
+
+      if (this.isEditVisible) {
+        buttons.push(h('div', {
+          class: 'btn icon',
+          title: 'Clone record',
+          onClick: () => this.$_editRecClone() },
+          '*'));
+      }
+      else {
+        buttons.push(h('div', {
+          class: 'btn icon',
+          title: 'New record',
+          onClick: () => this.$_editRecNew() },
+          '+'));
+        
+        if (this.editArrayProp)
+          buttons.push(h('div', {
             class: 'btn icon',
-            title: 'New record',
-            onClick: () => this.$_editRecNew() },
-            '+'),
-          this.editArrayProp
-            ? h('div', {
-                class: 'btn icon',
-                title: 'Back to store edit',
-                onClick: () => this.$_backToStoreEdit() },
-                'c')
-            : null]);
+            title: 'Back to store edit',
+            onClick: () => this.$_backToStoreEdit() },
+            'c'));
+      }
+
+      toolBar = h('div', { class: 'toolBar' }, [buttons]);
+    }
 
     const header = h('header', [
       h('div', { class: 'title' }, [

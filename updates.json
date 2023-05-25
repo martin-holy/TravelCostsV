@@ -13,6 +13,11 @@
       "files": [
         "/TravelCostsV/js/common.js"
       ]
+    },
+    { "version": "v2023.05.25",
+      "files": [
+        "/TravelCostsV/js/TableManager.js"
+      ]
     }
   ]
 }
